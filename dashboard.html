@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<style>
+		.navigation {
+          height:60%;
+		  padding-left:1.2em;
+		  margin-top:0.6em;
+		  min-height: 200px;
+        }
+		body {
+		height: 285px;
+        width: 210px;
+		background-color:white;
+		<!--#f0f0f0-->
+		padding:0;
+		margin:0;
+		
+		}
+		.navgroup{
+		font-size:1.2em;
+		
+		height:100%;
+		width:100%;
+		padding:0;
+		margin:0;
+		}
+		.iconhead{
+		height:30%;
+		background-color:white;}
+		
+		.options{
+		width:100%;
+		margin:0;
+		padding:0;
+		
+		height:20%;}
+		
+		#dsicon{
+		margin:auto;
+		display:block;
+		
+	
+		padding-top:0.6em;
+		
+		
+		}
+		#feedback{
+		float:left;
+		height: 100%;
+		width: 49%;
+		text-align: center;
+		margin:0;
+		padding:0;
+		background-color: #a9a9a9;
+		}
+		#settings{
+		float:right;
+		border-left: 0.1em solid white;
+		width: 50%;
+		height: 100%;
+		text-align: center;
+		margin:0;
+		padding:0;
+		background-color: #a9a9a9;
+		}
+		.navigation2{
+		    display: inline-block;
+			
+			height:20%;
+		}
+		label:hover{
+		color:white;
+		}
+		ul{
+		    display: none;}
+		li{list-style-type: none;}
+		
+		input:checked~ul{
+		display:block;
+		}
+		input{
+		display:none;}
+		.navigation1{
+		
+		height:20%;
+		}
+		.navigation3{
+		height:20%;
+		}
+		.navigation img{
+		float:left;
+		padding-right:0.6em}
+		#clclast{
+		float:left;
+		width:49%;
+		text-align:center;
+		padding-bottom:0.3em;
+		}
+		#clc{
+		float:right;
+		width:50%;
+		text-align:center;
+		padding-bottom:0.3em;
+		border-left: 0.1em solid white;
+		}
+		.add{
+		width:100%;
+		text-align:center;
+		}
+		#topicid{
+		width: 100%;
+		
+		text-align: center;
+		}
+		#subBtn{
+		display:none;
+		margin-left:43%;
+		margin-top:1.6%;
+		
+		}
+		#inputTop{
+		height: 2.5em;
+		width:100%;
+		display:none;
+		text-align:center;
+	
+		}
+		#imgca{
+		padding-right:0.5em;
+		}
+		#imgcl{
+		padding-right:0.5em;}
+		a{
+		text-decoration:none;
+		}
+		</style>
+		
+	
+		
+	</head>
+	<body>
+	<div class="navgroup" id="navbody">
+		<div class="iconhead"><img id="dsicon" src="icons/64popicon.png"/></div>
+		
+		<div class="add">
+			<button id="addBtn" value="5"><img id="btnImgID" src="icons/add.png"/></button>
+			<div id="topicid">
+				<input name="topic" id="inputTop"  placeholder="Enter New Topic"/>
+				<button id="subBtn" value="5"><img id="subbtnImgID" src="icons/correct1.png"/></button>
+			</div>
+		</div>
+		<div class="navigation">
+			
+			<hr>
+			<div class="navigation1"><img id="dsicon" src="icons/monitor.png"/><a href="https://google.com" target="_blank">Show my board</a></div>
+			<hr>
+			<div class="navigation2" id="high">
+				<input id="checker" value="5" type="checkbox" name="dropdown"/>
+				<label for="checker"><img id="dsicon" src="icons/list.png"/>Highlights</label>
+				<ul>
+					<li>Total highlights</li>
+					<li>Page highlight <span id="pghighlight"></span></li>
+				</ul>
+			</div>
+			<hr>
+			<div class="navigation3"><img id="dsicon" src="icons/close.png"/>Enabled on this site</div>
+			<hr>
+		</div>
+		<div class="clearOptions">
+			
+			<div id="clclast"><button id="btnLastclear"><img id="imgcl" src="icons/cross.png" />Clear last</button></div>
+			<div id="clc"><button id="btnAllclear"><img id="imgca" src="icons/clearall.png" />Clear All</button></div>
+			
+		</div>
+		<div class="options">
+			<div id="feedback"><img id="dsicon" src="icons/chat.png"/>Push Stack</div>
+			<div id="settings"><img id="dsicon" src="icons/gear.png"/>Settings</div>
+		</div>
+		
+	</div>
+	</body>
+	<script src="popup.js">
+	</script>
+</html>
