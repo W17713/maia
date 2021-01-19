@@ -1,4 +1,5 @@
 var mongoclient = require('mongodb').MongoClient;
+var objectID = require('mongodb').ObjectID;
 
 
 class Aggregator {
@@ -9,13 +10,9 @@ class Aggregator {
     }
 
     put(data,collectionName){
-        //console.log(this.url);
-        //console.log(this.dbName);
         mongoclient.connect(this.url, function(err,db){
             if(err) throw err;
-            var dbo =  db.db(dbName);
-            //console.log(dbo);
-            //console.log(this.dbo);   
+            var dbo =  db.db(dbName);  
             dbo.collection(collectionName).insertMany(data, function(err,res){
                 if(err) throw err;
                 console.log(res);
@@ -24,7 +21,7 @@ class Aggregator {
         });
         
     }
-
+    //get all documents
     get(collectionName){
         mongoclient.connect(this.url,function(err,db){
             if(err) throw err;
@@ -38,19 +35,49 @@ class Aggregator {
         });
     }
 
-    update(quer,newValue,collectionName){
-         mongoclient.connect(this.url,function(err,db){
-            //console.log('old: '+quer);
+    //query one collection
+    query(query,collectionName){
+        
+        mongoclient.connect(this.url,function(err,db){
             if(err) throw err;
             var dbo = db.db(dbName);
             
-            dbo.collection(collectionName).updateMany(quer,newValue,function(err,res){
-                console.log('old: '+quer);
+            dbo.collection(collectionName).find(query).toArray(function(err,res){
                 if(err) throw err;
-                console.log('new value:'+res)
+                db.close();
+            });
+         
+        });
+       
+    }
+    //Update document by ID
+    update(id,newValue,collectionName){
+         mongoclient.connect(this.url,function(err,db){
+            if(err) throw err;
+            var dbo = db.db(dbName);
+            var oldvalue = {_id:objectID(id)}
+            var newvalue = {$set: newValue}
+            dbo.collection(collectionName).updateOne(oldvalue,newvalue,function(err,res){
+                if(err) throw err;
+                console.log('res obj'+res)
                 db.close;
             }); 
         });
+    }
+
+    //delete document by ID 
+    delete(id,collectionName){
+        mongoclient.connect(this.url, function(err,db){
+            if(err) throw err;
+            var dbo = db.db(dbName);
+            var delID = {_id:objectID(id)}
+            dbo.collection(collectionName).deleteOne(delID,function(err,res){
+                if(err) throw err;
+                console.log('1 doc deleted');
+                db.close();
+            });
+        });
+
     }
 }
 
