@@ -4,6 +4,10 @@
   },
   "dependencies": {
     "bcrypt": "^5.0.0",
-    "mongodb": "^3.6.3"
+    "connect-redis": "^5.0.0",
+    "express": "^4.17.1",
+    "express-session": "^1.17.1",
+    "mongodb": "^3.6.3",
+    "redis": "^3.0.2"
   }
 }

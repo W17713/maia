@@ -36,9 +36,31 @@ class Aggregator {
     }
 
     //query one collection
-    query(query,collectionName){
-        
-        mongoclient.connect(this.url,function(err,db){
+    query(query,collectionName){  
+        var dburl = this.url;
+        return new Promise(function(resolve, reject) {
+            mongoclient.connect(dburl,function(err,db) {
+                if(err){
+                    reject(err);
+                }else{
+                    resolve(db);
+                    console.log('db resolved');
+                }
+            });
+        }).then(function(db) {
+            return new Promise(function(resolve, reject) {
+                //console.log(db.db(dbName));
+                var dbo = db.db(dbName);
+                dbo.collection(collectionName).find(query).toArray(function(err,items) {
+                    if(err){
+                        reject(err);
+                    }else{
+                        resolve(items);
+                    }
+                });
+            });
+        });  
+    /*    mongoclient.connect(this.url,function(err,db){
             if(err) throw err;
             var dbo = db.db(dbName);
             
@@ -46,9 +68,8 @@ class Aggregator {
                 if(err) throw err;
                 db.close();
             });
-         
-        });
-       
+            
+        });*/
     }
     //Update document by ID
     update(id,newValue,collectionName){
