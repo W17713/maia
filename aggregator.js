@@ -23,7 +23,31 @@ class Aggregator {
     }
     //get all documents
     get(collectionName){
-        mongoclient.connect(this.url,function(err,db){
+        var dburl=this.url;
+        return new Promise(function(resolve,reject){
+            mongoclient.connect(dburl,function(err,db){
+                if(err){
+                    reject(err);
+                    console.log(err);
+                }else{
+                    resolve(db);
+                }
+            })
+        }).then(function(db){
+                return new Promise(function(resolve, reject){
+                    var dbo = db.db(collectionName);
+                        dbo.collection(collectionName).find({}).toArray(function(err,res){
+                            if(err) {
+                                console.log(err);
+                                reject(err);
+                            }else{
+                                resolve(res);
+                            }
+                           // db.close;
+                        });
+            });
+        });
+       /* mongoclient.connect(this.url,function(err,db){
             if(err) throw err;
             var dbo = db.db(dbName);
             dbo.collection(collectionName).find({}).toArray(function(err,res){
@@ -32,7 +56,7 @@ class Aggregator {
                 db.close;
             });
 
-        });
+        });*/
     }
 
     //query one collection
@@ -56,7 +80,9 @@ class Aggregator {
                         reject(err);
                     }else{
                         resolve(items);
+                        console.log(items);
                     }
+                    db.close;
                 });
             });
         });  

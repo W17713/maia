@@ -1,7 +1,9 @@
+const { MongoClient } = require('mongodb');
 var Agg = require('./aggregator');
 var secure = require('./security');
 const aggregator = new Agg("mongodb://localhost:27017/","maia");
 var userCollection = 'Users';
+var highlightsCol ='Highlights';
 
 class User {
     constructor(){
@@ -55,8 +57,9 @@ class User {
             secure.compare(password,userdata[0].password).then(function(res){
             //if match
                 if(res){
-                    //create use session
+                    //create user session
                     console.log('new user session');
+                    //redirect user
                 }else{
 
                 }
@@ -66,7 +69,13 @@ class User {
 
     }
     //logout
-    //getmycollections
+    getmyDocuments(userid){
+        var query = {"userid":userid};
+        aggregator.query(query,highlightsCol).then(function(res){
+            console.log({"userid":userid}+'collection '+highlightsCol);
+            console.log(res);
+        });
+    }
 
 }
 
