@@ -53,6 +53,13 @@ class User {
     login(username,password){
         //var query = {"username": username}
         //query with username, compare passwords 
+        /*return new Promise(function(resolve,reject){
+            if(err){
+                reject(err);
+            }else{
+                resolve()
+            }
+        });*/
         aggregator.query({"username": username},userCollection).then(function(userdata){
             secure.compare(password,userdata[0].password).then(function(res){
             //if match
@@ -61,7 +68,7 @@ class User {
                     console.log('new user session');
                     //redirect user
                 }else{
-
+                    //handle error, user not logged in
                 }
             });  
                   
