@@ -1,6 +1,7 @@
 var bcrypt = require('bcrypt');
 
  function encrypt(password){
+     if(password){
     console.log('encrypting');
     return new Promise(function(resolve, reject){
         bcrypt.genSalt(10, function(err, salt){
@@ -25,6 +26,10 @@ var bcrypt = require('bcrypt');
         });
         });
     });
+}else{
+    console.log('empty');
+        return 'password cannot be empty';
+    }
 }
 
 function compare(enteredPass,hashedpass){
