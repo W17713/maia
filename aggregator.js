@@ -10,6 +10,7 @@ class Aggregator {
     }
 
     put(data,collectionName){
+       if(data !=''){
         mongoclient.connect(this.url, function(err,db){
             if(err) throw err;
             var dbo =  db.db(dbName);  
@@ -19,6 +20,9 @@ class Aggregator {
                 db.close();
             });        
         });
+       }else{
+           return 'cannot put empty data';
+       }
         
     }
     //get all documents
@@ -41,7 +45,8 @@ class Aggregator {
                                 console.log(err);
                                 reject(err);
                             }else{
-                                resolve(res);
+                                console.log(res);
+                                resolve(res);                                
                             }
                            // db.close;
                         });

@@ -29,3 +29,9 @@ test('when no password is specified, return error string ',()=>{
     var response = secure.encrypt();
     expect(response).toMatch(/password cannot be empty/);
 });
+
+test('test to decode password when received', ()=>{
+    var pass = secure.filter('fiFAIyQlXiYqXys9LC4vPD47J14l');
+    console.log(pass);
+    expect(pass).toBe("~!@#$%^&*_+=,./<>;'^%");
+});

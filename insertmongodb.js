@@ -1,3 +1,4 @@
+/*
 const agg = require('./aggregator');
 const user = require('./User');
 const aggregator = new agg("mongodb://localhost:27017/","maia");
@@ -5,9 +6,9 @@ const User = new user;
 const sessmng = require('./sessionmanager');
 const Manager = require('./sessionmanager');
 const sess = new Manager;
-
-
-
+*/
+const dbm = require('./dbManager');
+const DBman = new dbm;
 var data = [
     { userid:'60085c0464c4bc3cfc584c2c',user: 'babel', text: 'This is my text'}
 ];
@@ -26,5 +27,6 @@ var query = {user: 'Babel'}
 //User.signUp('jake','blvcc','blvcc');
 //User.login('jake','blvcc');
 //User.getmyDocuments('60085c0464c4bc3cfc584c2c');
-
-console.log(sess.createuserSession());
+DBman.start().then(function(result){
+    console.log(result);
+});
