@@ -16,8 +16,8 @@
 	"scripts":["getSelectedText.js"],
 	"persistent":true
 	},
-	
-"permissions":["activeTab","storage"],
+"permissions":["activeTab","storage","*://localhost/*"],
+"externally_connectable":{"matches":["*://localhost/*"]},
 "manifest_version":2
 }
 

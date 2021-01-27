@@ -2,20 +2,26 @@ const express = require('express');
 const session = require('express-session');
 const router = express.Router();
 const User = require('./user');
+const bodyParser = require('body-parser');
 const newuser = new User;
 
 const app = express();
-
-router.post('/login',function(req,res){
-    //get username from fe
-    //get password from fe
-    newuser.login(username,password).then(function(result){
-        if(result){
-            res.end(result);
-        }else{
-            res.end("failed)");
-        }
-        
-    })
+app.use(bodyParser.json());
+app.post('/postHighlights',function(req,res){
+    console.log('request '+req.body.userdata);
+    /*var requestBody = req.body;
+    while(i>0){
+       console.log(requestBody['key'+i]);
+        i=i-1;
+    }*/
     
+    res.send('got a POST request');  
+});
+
+app.get('/',function(reg,res){
+    res.send('take this response');
+});
+
+app.listen(3000,()=>{
+    console.log('app listening on port 3000');
 });

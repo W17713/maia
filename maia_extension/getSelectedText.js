@@ -5,7 +5,7 @@ function getSelectedText(e) {
 	temp_data=(document.all) ? document.selection.createRange().text : document.getSelection();
 	
 	//assign text to input
-	//document.getElementById('copiedText').value=temp_data;
+	document.getElementById('copiedText').value=temp_data;
 	console.log(temp_data);
 	//popup options to decide what to do with text
 }
@@ -41,48 +41,51 @@ var key ='';
 var msg='';
 var msgObj={};
 
+const Http = new XMLHttpRequest();
+const url = "http://localhost:3000/postHighlights";
+
 function receiverFxn(req,sender,sendresp){
 	badgeCount=badgeCount+req.count;
 	//console.log(req);
 	//generate key from badge count
 	msgObj['key'+badgeCount]=req.message;
 	
-	//console.log(msgObj);
+	//console.log('msgOBJ: '+msgObj);
 	
 chrome.storage.local.set(msgObj, function(){
 		if(Err){
-			console.log();
+			console.log(Err);
 		}else{
-			
 			chrome.browserAction.setBadgeText({text:badgeCount.toString()});
 			chrome.storage.local.get(null,function (results){
-			console.log(results)
+			console.log(results);
 	}); 
 		}
 		
 	});
-	/*
+	
 	chrome.storage.local.get(null,function (results){
 		console.log(results)
 	});
-	*/
-	//chrome.runtime.sendMessage(req);
+	
+	chrome.runtime.sendMessage(req);
 }
 
 
-const Http = new XMLHttpRequest();
-const url = "https://jsonplaceholder.typicode.com/";
+/*Http.open("POST",url);
+			//Http.SetRequestHeader("Content-type","application/json");
+			//Http.send(msg);
+			
+			Http.send(results);
+				
+			
+			Http.onreadystatechange = function(){
+				if(this.readyState==4 && this.status==200){
+					console.log(Http.responseText);
+				}
+			}*/
 
-Http.open("GET",url);
-//Http.open("POST",url.true);
-//Http.SetRequestHeader("Content-type","application/json");
-//Http.send(msg);
-Http.send();
-Http.onreadystatechange = function(){
-	if(this.readyState==4 && this.status==200){
-		//console.log(Http.responseText);
-	}
-}
+
 
 
 

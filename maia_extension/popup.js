@@ -109,7 +109,7 @@ function postTopic(){
 //push all data to backend 
 
 const Http = new XMLHttpRequest();
-const url = "http://ababel.me/home/backend.php";
+const url = "http://localhost:3000/postHighlights";
 document.getElementById('feedback').addEventListener('click',pushStack);
 function pushStack(){
 	
@@ -117,14 +117,15 @@ function pushStack(){
 	console.log("ok");
 	//Http.open("GET",url);
 	Http.open("POST",url,true);
-	//Http.setRequestHeader("Content-Type","application/json;charset=UTF-8");
+	Http.setRequestHeader("Content-Type","application/json;charset=UTF-8");
 	Http.send(JSON.stringify(data));
+	console.log(JSON.stringify({userdata:{data}}));
 	
 	//	Http.send();
 	Http.onreadystatechange = function(){
 		if(this.readyState==4 && this.status==200){
-			console.log("Resp is:");
-			console.log(Http.responseText);
+			console.log("Resp is: "+Http.responseText);
+			
 		}
 	}
 	});
