@@ -1,18 +1,23 @@
 const { MongoClient } = require('mongodb');
 var Agg = require('./aggregator');
 var secure = require('./security');
-const aggregator = new Agg("mongodb://localhost:27017/","maia");
+//"mongodb://localhost:27017/","maia"
 var userCollection = 'Users';
 var highlightsCol ='Highlights';
 
 class User {
-    constructor(){
-        //aggregator;
+    constructor(url,db){
+        this.url=url;
+        this.db = db;
+        const aggregator = new Agg(this.url,this.db);
     }
 
     
 
     signUp(username,password,confirmpass){
+        if(username =='' || password=='' || confirmpass==''){
+            return 'parameters cannot be empty';
+        }else{
         //filter username 
         //if username not found in users list
         var query = {"username": username}
@@ -30,6 +35,11 @@ class User {
                             secure.encrypt(password).then(function(hash){
                                 var userData =[{'username': username,'password':hash}];
                                 aggregator.put(userData,userCollection);
+                                aggregator.query({'username': username},userCollection).then(function(res){
+                                    if(res){
+                                        return true;
+                                    }
+                                });
                                 console.log('userData stored '+userData);
                             },function(err){
                                 //log error if not resolved
@@ -42,11 +52,12 @@ class User {
                         
                 }else{
                     //handle when user exists
+                    return 'user already exists';
                 }
         }, function(err){
             console.log('there was an error'+err);
         });
-        
+    }
         //aggregator.query(query,userCollection);
     }
     //login
@@ -66,9 +77,11 @@ class User {
                 if(res){
                     //create user session
                     console.log('new user session');
+                    return true;
                     //redirect user
                 }else{
                     //handle error, user not logged in
+                    return false;
                 }
             });  
                   
@@ -78,9 +91,12 @@ class User {
     //logout
     getmyDocuments(userid){
         var query = {"userid":userid};
-        aggregator.query(query,highlightsCol).then(function(res){
-            console.log({"userid":userid}+'collection '+highlightsCol);
-            console.log(res);
+        return new Promise(function(resolve,reject){
+            aggregator.query(query,highlightsCol).then(function(res){
+                console.log({"userid":userid}+'collection '+highlightsCol);
+                console.log(res);
+                resolve(res);
+            });
         });
     }
 

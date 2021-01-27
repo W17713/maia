@@ -1,5 +1,3 @@
-const { text } = require('express');
-const { TestScheduler } = require('jest');
 const aggregate = require('../aggregator');
 const dbManager = require('../dbManager');
 const DBman = new dbManager;
@@ -9,7 +7,7 @@ const DBman = new dbManager;
     afterAll(()=>DBman.stop());
     
 
-test('insert',()=>{
+test('insert user',()=>{
     DBman.start().then(function(result){
         const agg = new aggregate(result.url,result.db);
         const user = result.db.collection('Users');
@@ -17,6 +15,17 @@ test('insert',()=>{
         agg.put(mockUser,'Users');
         const insertedUser = agg.query(mockUser);
         expect(insertedUser).toEqual(mockUser);         
+});   
+});
+
+test('insert highlight',()=>{
+    DBman.start().then(function(result){
+        const agg = new aggregate(result.url,result.db);
+        const user = result.db.collection('Highlights');
+        const mockHighlight = {username:'blvcc',text:'blvcc is the bible'};
+        agg.put(mockHighlight,'Highlights');
+        const insertedHigh = agg.query(mockHighlight);
+        expect(insertedHigh).toEqual(mockHighlight);         
 });   
 });
 
