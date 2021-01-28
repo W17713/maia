@@ -16,7 +16,7 @@ class Aggregator {
             var dbo =  db.db(dbName);  
             dbo.collection(collectionName).insertMany(data, function(err,res){
                 if(err) throw err;
-                console.log(res);
+                //console.log(res);
                 db.close();
             });        
         });
@@ -73,7 +73,7 @@ class Aggregator {
                     reject(err);
                 }else{
                     resolve(db);
-                    console.log('db resolved');
+                    //console.log('db resolved');
                 }
             });
         }).then(function(db) {
@@ -85,7 +85,7 @@ class Aggregator {
                         reject(err);
                     }else{
                         resolve(items);
-                        console.log(items);
+                        //console.log(items);
                     }
                     db.close;
                 });

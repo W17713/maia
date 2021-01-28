@@ -44,8 +44,8 @@ function compare(enteredPass,hashedpass){
         });
     }
 
-function filter(password){
-    return Buffer.from(password,'base64').toString('ascii');
+function filter(data){
+    return Buffer.from(data,'base64').toString('ascii');
 }
 
 
