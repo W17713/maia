@@ -77,23 +77,22 @@ class User {
     login(username,password){
         const decodeUser = secure.filter(username);
         const decodepass= secure.filter(password); 
+        return new Promise(function(resolve,reject){ 
         global.aggregator.query({"username": decodeUser},userCollection).then(function(userdata){
-            secure.compare(decodepass,userdata[0].password).then(function(res){
-            //if match
-                if(res){
-                    //create user session
-                    //console.log('new user session');
-                    return true;
-                    //redirect user
-                }else{
-                    //handle error, user not logged in
-                    //console.log('could not login');
-                    return false;
-                }
-            });  
+            resolve(userdata); 
                   
         });
-
+    }).then(function(userdata){
+        return new Promise(function(resolve,reject){
+            secure.compare(decodepass,userdata[0].password).then(function(res){
+                if(res===true){
+                    resolve(userdata);
+                }else{
+                    resolve(res);
+                }
+    });
+    });
+    });
     }
     //logout
     getmyDocuments(userid){
