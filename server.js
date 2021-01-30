@@ -15,26 +15,31 @@ app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
 var createsession = sessmng.createuserSession();
 app.use(createsession);
-app.post('/postHighlights',function(req,res){
+app.post('/highlights',function(req,res){
     var i = 1;
     var j='';
-    
+    sess=req.session;
+    if(sess.username && sess.password){
     while(i<Object.keys(req.body.userdata.data).length+1){
         j='key'+i.toString();
         //console.log('j is '+j);
         console.log(req.body.userdata.data[j]);
         //push each document to collection
-        agg.put({text:req.body.userdata.data[j]},'Highlights');
+        agg.put([{'userid':sess.userid,'date':req.body.userdata.date,'topic':req.body.userdata.topic,'text':req.body.userdata.data[j],'orderno':req.body.userdata[j].orderno}],'Highlights');
         i++;
     }
     res.sendStatus(200); 
- 
+}else{
+    res.send('<p>cannot post if not logged in</p>');
+}
 });
 
-app.get('/postHighlights',function(req,res){
+app.get('/highlights',function(req,res){
     sess = req.session;
     if(sess.username && sess.password){
         newuser.getmyDocuments(sess.userid);
+    }else{
+        res.send('<p>You cannot view posts if you are not logged in</p>');
     }
    
 });
@@ -64,8 +69,11 @@ app.post('/login',function(req,res){
         if(resp===false){
             res.write('<p>false</p>');
         }else{
+            res.send(resp[0]['_id']);
             res.write('<p>you can logout here</p>');
-            //res.redirect('/home');
+            sess.userid = resp[0]['_id'];
+            console.log(sess.userid);
+            
         }
     }); 
 });
@@ -75,6 +83,7 @@ app.post('/logout',function(req,res){
         if(err){
             console.log(err);
         }else{
+            console.log('session destroyed');
             res.redirect('/login');
         }
     });
@@ -82,6 +91,19 @@ app.post('/logout',function(req,res){
 
 app.get('/home',function(req,res){
     res.write('<h1>welcome home</h>');
+});
+
+app.post('/changeusername',function(req,res){
+    const result = newuser.changeUsername();
+    if(result===true){
+        res.write('<p>usrname changed</p>');
+    }else{
+        res.write('<p>could not change username</p>');
+    }
+});
+
+app.post('/changepass',function(req,res){
+    const result = newuser.changePassword();
 });
 
 app.listen(3000,()=>{

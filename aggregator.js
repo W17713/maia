@@ -103,18 +103,29 @@ class Aggregator {
         });*/
     }
     //Update document by ID
-    update(id,newValue,collectionName){
-         mongoclient.connect(this.url,function(err,db){
-            if(err) throw err;
+    update(oldValue,newValue,collectionName){
+        var dburl = this.url;
+         return new Promise(function(resolve,reject){
+            mongoclient.connect(dburl,function(err,db){
+                if(err) {
+                    reject(err);
+                }else{
+                    resolve(db);
+                } 
+            });
+         }).then(function(db){
             var dbo = db.db(dbName);
-            var oldvalue = {_id:objectID(id)}
-            var newvalue = {$set: newValue}
-            dbo.collection(collectionName).updateOne(oldvalue,newvalue,function(err,res){
-                if(err) throw err;
-                console.log('res obj'+res)
-                db.close;
-            }); 
-        });
+            return new Promise(function(resolve,reject){
+                dbo.collection(collectionName).updateOne(oldValue,newValue,function(err,res){
+                    if(err) {
+                        reject(err);
+                    }else{
+                        resolve(res);
+                    }
+                    db.close;
+                });
+            });
+         }); 
     }
 
     //delete document by ID 

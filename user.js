@@ -98,13 +98,51 @@ class User {
     getmyDocuments(userid){
         //var query = {"userid":userid};
         
-            this.aggregator.query({"userid":userid},highlightsCol).then(function(res){
+            global.aggregator.query({"userid":userid},highlightsCol).then(function(res){
                 console.log(userid+'collection '+highlightsCol);
                 console.log(res);
                
                 return res;
             });
        
+    }
+
+    //change username
+    changeUsername(oldname,newname,pass){
+        const decodenewname = secure.filter(newname);
+        //query to chcck user exists
+        this.login(oldname,pass).then(function(res){
+            if(res===true){
+                //update with new pass
+                global.aggregator.update(res[0]['username'],decodenewname,userCollection).then(function(resp){
+                    console.log('username resp:'+resp);
+                    return resp;
+                });
+            }else{
+                return 'parameters were wrong';
+            }
+        });
+        //update username
+    }
+
+    changePassword(username,oldpass,newpass){
+        const userdecode=secure.filter(username);
+        const newpassdecode=secure.filter(newpass);
+        //check username and old password correct
+        this.login(username,oldpass).then(function(res){
+            if(res===true){
+                const newpassword=secure.encrypt(newpassdecode).then(function(resultpass){
+                    global.aggregator.update(res[0]['password'],resultpass,userCollection).then(function(resp){
+                        console.log('password resp: '+resp);
+                        return resp;
+                    });
+                });
+                //update with new pass
+                
+            }else{
+                return 'parameters were wrong';
+            }
+        });
     }
 
 }

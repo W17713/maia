@@ -76,4 +76,40 @@ test('wrong credentials must return false',()=>{
         const resp=newuser.login('janet','jackson12345');
         expect(resp).toBeFalsy();
     });
-})
+});
+
+test('change username to new if credentials are correct',()=>{
+    dbm.start().then(function(result){
+        const agg = new aggregate(result.url,result.db);
+        const newuser = new user(result.url,result.db);
+        const resp = newuser.changeUsername('janet','janet123','jackson');
+        expect(resp.modifiedCount).toEqual(1);
+    });
+});
+
+test('Does not change username if credentials are wrong',()=>{
+    dbm.start().then(function(result){
+        const agg = new aggregate(result.url,result.db);
+        const newuser = new user(result.url,result.db);
+        const resp = newuser.changeUsername('janet23','janet123','jackson');
+        expect(resp).toMatch(/parameters were wrong/);
+    });
+});
+
+test('Does not change password if parametes are wrong',()=>{
+    dbm.start().then(function(result){
+        const agg = new aggregate(result.url,result.db);
+        const newuser = new user(result.url,result.db);
+        const resp = newuser.changePassword('janet','janepass','jackson123');
+        expect(resp).toMatch(/parameters were wrong/);
+    });
+});
+
+test('change password if credentials are correct',()=>{
+    dbm.start().then(function(result){
+        const agg = new aggregate(result.url,result.db);
+        const newuser = new user(result.url,result.db);
+        const resp = newuser.changePassword('janet','jackson','janet123');
+        expect(resp.modifiedCount).toEqual(1);
+    });
+});
