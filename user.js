@@ -41,17 +41,21 @@ class User {
                             secure.encrypt(decodedPass).then(function(hash){
                                 var userData =[{'username': secure.filter(username),'email':secure.filter(email),'password':hash}];
                                 global.aggregator.put(userData,userCollection);
-                                global.aggregator.query({'username': secure.filter(username)},userCollection).then(function(res){
-                                    console.log('resp '+res[0]['username']);
-                                    if(res[0]['username']===secure.filter(username)){
+                                return true;
+                                /*global.aggregator.query({'username': secure.filter(username)},userCollection).then(function(res){
+                                    console.log('resp '+res);
+                                    if(res[0]['username']==secure.filter(username)){
                                         console.log(res[0]['username']);
                                         return true;
                                     }else{
                                         return 'user was not successfully created. Please try again';
                                     }
-                                });
+                                });*/
                                 console.log('userData stored '+userData);
                             });
+                        }else{
+                            console.log('passwords do not  match');
+                            return 'passwords do not  match';
                         }
                         
                 }else{
@@ -62,7 +66,7 @@ class User {
                         console.log(secure.filter(username)+' already exists');
                         return secure.filter(username)+' already exists';
                     }else{
-                        //console.log(secure.filter(email)+' already exists');
+                        console.log(secure.filter(email)+' already exists');
                         return secure.filter(email)+' already exists';
                     }
                 }
@@ -80,18 +84,23 @@ class User {
         return new Promise(function(resolve,reject){ 
         global.aggregator.query({"username": decodeUser},userCollection).then(function(userdata){
             resolve(userdata); 
-                  
         });
     }).then(function(userdata){
-        return new Promise(function(resolve,reject){
-            secure.compare(decodepass,userdata[0].password).then(function(res){
-                if(res===true){
-                    resolve(userdata);
-                }else{
-                    resolve(res);
-                }
-    });
-    });
+        console.log('userdata'+userdata);
+        if(userdata.length!==0){
+            return new Promise(function(resolve,reject){
+                secure.compare(decodepass,userdata[0].password).then(function(res){
+                    if(res===true){
+                        console.log('result'+res);
+                        resolve(userdata);
+                    }else{
+                        resolve(res);
+                    }
+        });
+        });
+        }else{
+            return "30001";
+        }
     });
     }
     //logout
@@ -110,38 +119,61 @@ class User {
     //change username
     changeUsername(oldname,newname,pass){
         const decodenewname = secure.filter(newname);
-        //query to chcck user exists
-        this.login(oldname,pass).then(function(res){
-            if(res===true){
-                //update with new pass
-                global.aggregator.update(res[0]['username'],decodenewname,userCollection).then(function(resp){
-                    console.log('username resp:'+resp);
-                    return resp;
-                });
-            }else{
-                return 'parameters were wrong';
-            }
+        var loginuser = this.login;
+        return new Promise(function(resolve,reject){
+            //query to chcck user exists
+            loginuser(oldname,pass).then(function(res){
+                console.log('updt rest '+res);
+                
+                if(res===false){
+                    //wrong credentials
+                    resolve(res);
+                }else{ 
+                    //user does not exist                  
+                    if(res=='30001'){
+                        resolve(res);
+                    //update with new username
+                    }else{
+                        console.log(res[0]['username']);
+                            global.aggregator.update({'username':res[0]['username']},{'username':decodenewname},userCollection).then(function(resp){
+                                //console.log('username resp:'+resp);
+                                resolve(resp);
+                            });
+                    }
+                }
+            });
         });
-        //update username
+    
     }
 
     changePassword(username,oldpass,newpass){
         const userdecode=secure.filter(username);
         const newpassdecode=secure.filter(newpass);
+        const loginuser= this.login;
         //check username and old password correct
-        this.login(username,oldpass).then(function(res){
-            if(res===true){
-                const newpassword=secure.encrypt(newpassdecode).then(function(resultpass){
-                    global.aggregator.update(res[0]['password'],resultpass,userCollection).then(function(resp){
-                        console.log('password resp: '+resp);
-                        return resp;
-                    });
-                });
-                //update with new pass
-                
-            }else{
-                return 'parameters were wrong';
-            }
+        return new Promise(function(resolve,reject){
+            //query to chcck user exists
+            loginuser(username,oldpass).then(function(res){
+                console.log('updt rest '+res); 
+                if(res===false){
+                    //wrong credentials
+                    resolve(res);
+                }else{
+                    //user does not exist
+                    if(res=='30001'){
+                        resolve(res);
+                    //update with new password    
+                    }else{
+                        secure.encrypt(newpassdecode).then(function(hashedpass){
+                            console.log(res[0]['username']);
+                            global.aggregator.update({'username':res[0]['username']},{'password':hashedpass},userCollection).then(function(resp){
+                                console.log('username resp:'+resp);
+                                resolve(resp);
+                            });
+                        });
+                    }
+                }
+            });
         });
     }
 

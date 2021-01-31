@@ -5,9 +5,12 @@ const User = require('./user');
 const Aggregate = require('./aggregator');
 const bodyParser = require('body-parser');
 const sessManager = require('./sessionmanager');
+const { response } = require('express');
 const newuser = new User("mongodb://localhost:27017/","maia");
 const agg = new Aggregate("mongodb://localhost:27017/","maia");
 const sessmng = new sessManager();
+const highlight = require('./highlight');
+const newHighlight = new highlight;
 
 const app = express();
 
@@ -52,8 +55,12 @@ app.post('/signup',function(req,res){
     const confirmpass=req.body.confirmpass;
     //console.log('username '+username);
     const results = newuser.signUp(username,email,password,confirmpass);
-    if(results){
+    if(results===true){
+        //console.log(results);
         res.redirect('/login');
+        
+    }else{
+        res.write(results);
     }
     
 });
@@ -69,10 +76,16 @@ app.post('/login',function(req,res){
         if(resp===false){
             res.write('<p>false</p>');
         }else{
-            res.send(resp[0]['_id']);
-            res.write('<p>you can logout here</p>');
-            sess.userid = resp[0]['_id'];
-            console.log(sess.userid);
+            if(resp=='30001'){
+                res.write('<p>user does not exist</p>');
+            }else{
+                res.send(resp[0]['_id']);
+                console.log(resp[0]['_id']);
+                res.write('<p>you can logout here</p>');
+                sess.userid = resp[0]['_id'];
+                console.log(sess.userid);
+            }
+            
             
         }
     }); 
@@ -94,16 +107,38 @@ app.get('/home',function(req,res){
 });
 
 app.post('/changeusername',function(req,res){
-    const result = newuser.changeUsername();
-    if(result===true){
-        res.write('<p>usrname changed</p>');
-    }else{
-        res.write('<p>could not change username</p>');
-    }
+    newuser.changeUsername(req.body.username,req.body.newusername,req.body.password).then(function(response){
+        console.log(response);
+        if(response.modifiedCount==1){
+            res.write('<p>usrname changed</p>');
+        }else{
+            if(response=='30001'){
+                res.write('<p>user entered does not exist</p>');
+            }else{
+                res.write('<p>wrong username or password. could not change username</p>');
+            }
+            
+        }
+    });
 });
 
 app.post('/changepass',function(req,res){
-    const result = newuser.changePassword();
+    newuser.changePassword(req.body.username,req.body.password,req.body.newpass).then(function(response){
+        console.log(response);
+        if(response.modifiedCount==1){
+            res.write('<p>password changed</p>');
+        }else{
+            if(response=='30001'){
+                res.write('<p>user entered does not exist</p>');
+            }else{
+                res.write('<p>wrong username or password. could not change username</p>');
+            }
+        }
+    });
+});
+
+app.post('/delete',function(req,res){
+    newHighlight.deletepost(req.body.postid);
 });
 
 app.listen(3000,()=>{

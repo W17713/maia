@@ -10,7 +10,7 @@ class Aggregator {
     }
 
     put(data,collectionName){
-       if(data !=''){
+       if(data.length !==0){
         mongoclient.connect(this.url, function(err,db){
             if(err) throw err;
             var dbo =  db.db(dbName);  
@@ -89,7 +89,7 @@ class Aggregator {
                     }
                     db.close;
                 });
-            });
+            }).catch(err=>{console.log('caught ',err.message)});
         });  
     /*    mongoclient.connect(this.url,function(err,db){
             if(err) throw err;
@@ -116,7 +116,7 @@ class Aggregator {
          }).then(function(db){
             var dbo = db.db(dbName);
             return new Promise(function(resolve,reject){
-                dbo.collection(collectionName).updateOne(oldValue,newValue,function(err,res){
+                dbo.collection(collectionName).updateOne(oldValue,{$set:newValue},function(err,res){
                     if(err) {
                         reject(err);
                     }else{
@@ -124,7 +124,7 @@ class Aggregator {
                     }
                     db.close;
                 });
-            });
+            }).catch(err=>{console.log('caught ',err.message)});
          }); 
     }
 
@@ -140,7 +140,6 @@ class Aggregator {
                 db.close();
             });
         });
-
     }
 }
 
