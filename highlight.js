@@ -1,13 +1,13 @@
 const aggregator = require('./aggregator');
-const Agg = new aggregator();
+const Agg = new aggregator("mongodb://localhost:27017/","maia");
 const highCollection = 'Highlights';
 class Highlight{
-    /*constructor(dburl,db){
-        this.url = dburl;
-        this.db = db;
-    }*/
+    constructor(){
+    }
 
     deletepost(postid){
         Agg.delete(postid,highCollection);
     }
 }
+
+module.exports = Highlight;

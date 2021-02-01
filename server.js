@@ -10,7 +10,7 @@ const newuser = new User("mongodb://localhost:27017/","maia");
 const agg = new Aggregate("mongodb://localhost:27017/","maia");
 const sessmng = new sessManager();
 const highlight = require('./highlight');
-const newHighlight = new highlight;
+const newHighlight = new highlight();
 
 const app = express();
 
@@ -22,13 +22,15 @@ app.post('/highlights',function(req,res){
     var i = 1;
     var j='';
     sess=req.session;
+    //
     if(sess.username && sess.password){
     while(i<Object.keys(req.body.userdata.data).length+1){
         j='key'+i.toString();
         //console.log('j is '+j);
         console.log(req.body.userdata.data[j]);
         //push each document to collection
-        agg.put([{'userid':sess.userid,'date':req.body.userdata.date,'topic':req.body.userdata.topic,'text':req.body.userdata.data[j],'orderno':req.body.userdata[j].orderno}],'Highlights');
+        //sess.userid
+        agg.put([{'userid':req.body.userdata.userid,'date':req.body.userdata.date,'topic':req.body.userdata.topic,'text':req.body.userdata.data[j],'orderno':req.body.userdata.data[j].orderno}],'Highlights');
         i++;
     }
     res.sendStatus(200); 
@@ -39,7 +41,7 @@ app.post('/highlights',function(req,res){
 
 app.get('/highlights',function(req,res){
     sess = req.session;
-    if(sess.username && sess.password){
+    if(sess.username && sess.password){ 
         newuser.getmyDocuments(sess.userid);
     }else{
         res.send('<p>You cannot view posts if you are not logged in</p>');
@@ -137,8 +139,9 @@ app.post('/changepass',function(req,res){
     });
 });
 
-app.post('/delete',function(req,res){
+app.post('/deletehigh',function(req,res){
     newHighlight.deletepost(req.body.postid);
+    res.write('<p>post deleted</p>');
 });
 
 app.listen(3000,()=>{
