@@ -22,8 +22,8 @@ app.post('/highlights',function(req,res){
     var i = 1;
     var j='';
     sess=req.session;
-    //
-    if(sess.username && sess.password){
+    //sess.username && sess.password
+    if(true){
     while(i<Object.keys(req.body.userdata.data).length+1){
         j='key'+i.toString();
         //console.log('j is '+j);
@@ -105,7 +105,20 @@ app.post('/logout',function(req,res){
 });
 
 app.get('/home',function(req,res){
-    res.write('<h1>welcome home</h>');
+    sess= req.session;
+    //req.body.userid 6017b06505201f401833cc9f
+   /* newHighlight.getTopics('6017b06505201f401833cc9f').then(function(topics){
+        const topicObj = Object.assign({},topics);
+        res.setHeader('Content-Type', 'application/json');
+        res.json(topicObj);
+    });*/
+
+    newHighlight.getOrderedDocs('Photosynthesis').then(function(docs){
+        const documents = Object.assign({},docs);
+        res.json(documents);
+    });
+    
+   
 });
 
 app.post('/changeusername',function(req,res){

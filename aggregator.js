@@ -26,42 +26,32 @@ class Aggregator {
         
     }
     //get all documents
-    get(collectionName){
-        var dburl=this.url;
-        return new Promise(function(resolve,reject){
-            mongoclient.connect(dburl,function(err,db){
+    getOrdered(queryObj,identifier,collectionName){
+        var dburl = this.url;
+        return new Promise(function(resolve, reject) {
+            mongoclient.connect(dburl,function(err,db) {
                 if(err){
                     reject(err);
-                    console.log(err);
                 }else{
                     resolve(db);
+                    //console.log('db resolved');
                 }
-            })
-        }).then(function(db){
-                return new Promise(function(resolve, reject){
-                    var dbo = db.db(collectionName);
-                        dbo.collection(collectionName).find({}).toArray(function(err,res){
-                            if(err) {
-                                console.log(err);
-                                reject(err);
-                            }else{
-                                console.log(res);
-                                resolve(res);                                
-                            }
-                           // db.close;
-                        });
             });
-        });
-       /* mongoclient.connect(this.url,function(err,db){
-            if(err) throw err;
-            var dbo = db.db(dbName);
-            dbo.collection(collectionName).find({}).toArray(function(err,res){
-                if(err) throw err;
-                console.log(res);
-                db.close;
-            });
-
-        });*/
+        }).then(function(db) {
+            return new Promise(function(resolve, reject) {
+                //console.log(db.db(dbName));
+                var dbo = db.db(dbName);
+                dbo.collection(collectionName).find({$query:queryObj,$orderby:{identifier:-1}}).toArray(function(err,items) {
+                    if(err){
+                        reject(err);
+                    }else{
+                        resolve(items);
+                        //console.log(items);
+                    }
+                    db.close;
+                });
+            }).catch(err=>{console.log('caught ',err.message)});
+        }); 
     }
 
     //query one collection
@@ -141,6 +131,8 @@ class Aggregator {
             });
         });
     }
+
+    
 }
 
 module.exports = Aggregator;
