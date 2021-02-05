@@ -11,9 +11,10 @@ const agg = new Aggregate("mongodb://localhost:27017/","maia");
 const sessmng = new sessManager();
 const highlight = require('./highlight');
 const newHighlight = new highlight();
-
+const cors = require('cors');
 const app = express();
 
+app.use(cors());
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
 var createsession = sessmng.createuserSession();
@@ -107,18 +108,24 @@ app.post('/logout',function(req,res){
 app.get('/home',function(req,res){
     sess= req.session;
     //req.body.userid 6017b06505201f401833cc9f
-   /* newHighlight.getTopics('6017b06505201f401833cc9f').then(function(topics){
+    newHighlight.getTopics('6017b06505201f401833cc9f').then(function(topics){
         const topicObj = Object.assign({},topics);
         res.setHeader('Content-Type', 'application/json');
         res.json(topicObj);
-    });*/
+    });
 
-    newHighlight.getOrderedDocs('Photosynthesis').then(function(docs){
+    /*newHighlight.getOrderedDocs('Photosynthesis').then(function(docs){
         const documents = Object.assign({},docs);
         res.json(documents);
-    });
-    
-   
+    });*/
+
+    /*newHighlight.shareTopic('6017b06505201f401833cc9f','Photosynthesis','6017b06505201f401833dd0g').then(function(response){
+        res.send(response);
+    });*/
+
+    /*newHighlight.receivedTopics('6017b06505201f401833dd0g').then(function(response){
+        res.send(response);
+    });*/
 });
 
 app.post('/changeusername',function(req,res){
