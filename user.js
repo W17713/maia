@@ -106,14 +106,13 @@ class User {
     //logout
     getmyDocuments(userid){
         //var query = {"userid":userid};
-        
+        return new Promise(function(resolve,reject){
             global.aggregator.query({"userid":userid},highlightsCol).then(function(res){
-                console.log(userid+'collection '+highlightsCol);
-                console.log(res);
-               
-                return res;
+                /*console.log(userid+'collection '+highlightsCol);
+                console.log(res);*/
+                resolve(res);
             });
-       
+        });    
     }
 
     //change username

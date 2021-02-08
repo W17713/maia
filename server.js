@@ -12,8 +12,11 @@ const sessmng = new sessManager();
 const highlight = require('./highlight');
 const newHighlight = new highlight();
 const cors = require('cors');
+const path = require('path');
 const app = express();
 
+
+app.use(express.static('public'));
 app.use(cors());
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
@@ -40,15 +43,21 @@ app.post('/highlights',function(req,res){
 }
 });
 
+
 app.get('/highlights',function(req,res){
     sess = req.session;
-    if(sess.username && sess.password){ 
-        newuser.getmyDocuments(sess.userid);
-    }else{
-        res.send('<p>You cannot view posts if you are not logged in</p>');
-    }
-   
+  //  if(sess.username && sess.password){ 
+        newuser.getmyDocuments('6017b06505201f401833cc9f').then(function(response){
+            res.send(response);
+        });
+        
+        
+ //   }else{
+  //      res.send('<p>You cannot view posts if you are not logged in</p>');
+  //  }  
+//
 });
+
 
 app.post('/signup',function(req,res){
     sess=req.session;
@@ -163,7 +172,11 @@ app.post('/deletehigh',function(req,res){
     newHighlight.deletepost(req.body.postid);
     res.write('<p>post deleted</p>');
 });
+//set port=2000 && 
+app.get('/',function(req,res){
+   res.sendFile(path.join(path.join(__dirname,'maia_webclient/client'),"public","index.html"));
+});
 
-app.listen(3000,()=>{
-    console.log('app listening on port 3000');
+app.listen(3080,()=>{
+    console.log('app listening on port 3080');
 });
