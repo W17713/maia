@@ -6,6 +6,9 @@ import { Form, Checkbox } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import './login.css';
+import {BrowserRouter as Router, Switch,Link,Route} from 'react-router-dom'
+import Highlightview from './components/component.signup'
+import NormalSignupForm from "./components/component.signup";
 const { Header, Footer,Content } = Layout;
 
 const NormalLoginForm  = () => {
@@ -14,6 +17,7 @@ const NormalLoginForm  = () => {
   };
 
   return (
+    
     <Form
       name="normal_login"
       className="login-form"
@@ -62,7 +66,7 @@ const NormalLoginForm  = () => {
         <Button type="primary" htmlType="submit" className="login-form-button">
           Log in
         </Button>
-        Or <a href="">register now!</a>
+        Or <Link to="/signup" >register now!</Link>
       </Form.Item>
     </Form>
   );
@@ -76,24 +80,33 @@ const InformationBlock = () =>{
 }
 const App = () => {
   return (
-    
-      <Row>
-      <Col span={24}>
-        <Layout className="layout">
-          <Header>
-          <div className="logo" />
-          </Header>
-        <Content style={{ padding: '50px 450px' }}>
-          <InformationBlock />
-        <div className="site-layout-content">
-          <NormalLoginForm/>
-        </div>
-        </Content>
-        <Footer style={{ textAlign: 'center' }}>maia ©2021 Created by SVSN, The company</Footer>
-        </Layout>
-      </Col>
-    </Row>
-    
+    <Router>
+      <div>
+        <Row>
+          <Col span={24}>
+            <Layout className="layout">
+              <Header>
+              <div className="logo" />
+              </Header>
+            <Content style={{ padding: '50px 450px' }}>
+              <InformationBlock />
+            <div className="site-layout-content">
+              <NormalLoginForm/>
+            </div>
+            </Content>
+            <Footer style={{ textAlign: 'center' }}>maia ©2021 Created by SVSN, The company</Footer>
+            </Layout>
+          </Col>
+        </Row>
+        
+          <Route exact path="/">
+            <NormalLoginForm/>
+          </Route>
+          <Route path="/signup">
+            <NormalSignupForm/>
+          </Route>
+      </div>
+    </Router>
   );
 };
 

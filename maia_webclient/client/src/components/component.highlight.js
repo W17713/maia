@@ -1,12 +1,11 @@
-import {Component} from React
+import {Component} from 'react';
+
 
 class Highlightview extends Component{
     constructor(props){
         super(props);
-        this.state={highlight:''};
+        this.state={highlight:[]};
     }
-
-    
 
     componentDidMount(){
         fetch('/highlights').then(
@@ -16,16 +15,15 @@ class Highlightview extends Component{
         );
     }
 
+
     render(){
         return (
             <div>
-                <div>RESPONSE</div>
-                {this.state.highlight}
+                <h1>RESPONSE</h1>
+                {this.state.highlight.userid}
             </div>
         );
     }
-
-
 }
 
 export default Highlightview;
