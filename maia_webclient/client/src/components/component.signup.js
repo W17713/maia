@@ -1,51 +1,174 @@
-import { Form, Input, InputNumber, Button } from 'antd';
+import React, { useState } from 'react';
+import {
+  Form,
+  Input,
+  Tooltip,
+  Cascader,
+  Select,
+  Row,
+  Col,
+  Checkbox,
+  Button,
+  AutoComplete,
+} from 'antd';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 
-const layout = {
-    labelCol: { span: 8 },
-    wrapperCol: { span: 16 },
-  };
-  
-  const validateMessages = {
-    required: '${label} is required!',
-    types: {
-      email: '${label} is not a valid email!',
-      number: '${label} is not a valid number!',
+const { Option } = Select;
+
+const formItemLayout = {
+  labelCol: {
+    xs: { span: 24 },
+    sm: { span: 8 },
+  },
+  wrapperCol: {
+    xs: { span: 24 },
+    sm: { span: 16 },
+  },
+};
+const tailFormItemLayout = {
+  wrapperCol: {
+    xs: {
+      span: 24,
+      offset: 0,
     },
-    number: {
-      range: '${label} must be between ${min} and ${max}',
+    sm: {
+      span: 16,
+      offset: 8,
     },
+  },
+};
+
+const NormalSignupForm = () => {
+  const [form] = Form.useForm();
+
+  const onFinish = (values: any) => {
+    console.log('Received values of form: ', values);
   };
-  
-  const NormalSignupForm = () => {
-    const onFinish = (values: any) => {
-      console.log(values);
-    };
-    return (
-        <Form {...layout} name="nest-messages" onFinish={onFinish} validateMessages={validateMessages}>
-          <Form.Item name={['user', 'name']} label="Name" rules={[{ required: true }]}>
-            <Input />
-          </Form.Item>
-          <Form.Item name={['user', 'email']} label="Email" rules={[{ type: 'email' }]}>
-            <Input />
-          </Form.Item>
-          <Form.Item name={['user', 'age']} label="Age" rules={[{ type: 'number', min: 0, max: 99 }]}>
-            <InputNumber />
-          </Form.Item>
-          <Form.Item name={['user', 'website']} label="Website">
-            <Input />
-          </Form.Item>
-          <Form.Item name={['user', 'introduction']} label="Introduction">
-            <Input.TextArea />
-          </Form.Item>
-          <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
-            <Button type="primary" htmlType="submit">
-              Submit
-            </Button>
-          </Form.Item>
-        </Form>
-      );
-    };
-    
+
+  return (
+    <Form
+      {...formItemLayout}
+      form={form}
+      name="register"
+      onFinish={onFinish}
+      initialValues={{
+        residence: ['zhejiang', 'hangzhou', 'xihu'],
+        prefix: '86',
+      }}
+      scrollToFirstError
+    >
+      <Form.Item
+        name="email"
+        label="E-mail"
+        rules={[
+          {
+            type: 'email',
+            message: 'The input is not valid E-mail!',
+          },
+          {
+            required: true,
+            message: 'Please input your E-mail!',
+          },
+        ]}
+      >
+        <Input />
+      </Form.Item>
+
+      <Form.Item
+        name="password"
+        label="Password"
+        rules={[
+          {
+            required: true,
+            message: 'Please input your password!',
+          },
+        ]}
+        hasFeedback
+      >
+        <Input.Password />
+      </Form.Item>
+
+      <Form.Item
+        name="confirm"
+        label="Confirm Password"
+        dependencies={['password']}
+        hasFeedback
+        rules={[
+          {
+            required: true,
+            message: 'Please confirm your password!',
+          },
+          ({ getFieldValue }) => ({
+            validator(_, value) {
+              if (!value || getFieldValue('password') === value) {
+                return Promise.resolve();
+              }
+              return Promise.reject('The two passwords that you entered do not match!');
+            },
+          }),
+        ]}
+      >
+        <Input.Password />
+      </Form.Item>
+
+      <Form.Item
+        name="nickname"
+        label={
+          <span>
+            Username&nbsp;
+            <Tooltip title="Choose a username to be identified by">
+              <QuestionCircleOutlined />
+            </Tooltip>
+          </span>
+        }
+        rules={[{ required: true, message: 'Please input your username!', whitespace: true }]}
+      >
+        <Input />
+      </Form.Item>
+
+
+
+      <Form.Item label="Captcha" extra="We must make sure that your are a human.">
+        <Row gutter={8}>
+          <Col span={12}>
+            <Form.Item
+              name="captcha"
+              noStyle
+              rules={[{ required: true, message: 'Please input the captcha you got!' }]}
+            >
+              <Input />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Button>Get captcha</Button>
+          </Col>
+        </Row>
+      </Form.Item>
+
+      <Form.Item
+        name="agreement"
+        valuePropName="checked"
+        rules={[
+          {
+            validator: (_, value) =>
+              value ? Promise.resolve() : Promise.reject('Should accept agreement'),
+          },
+        ]}
+        {...tailFormItemLayout}
+      >
+        <Checkbox>
+          I have read the <a href="">agreement</a>
+        </Checkbox>
+      </Form.Item>
+      <Form.Item {...tailFormItemLayout}>
+        <Button type="primary" htmlType="submit">
+          Register
+        </Button>
+      </Form.Item>
+    </Form>
+  );
+};
+
 export default NormalSignupForm;
 
 

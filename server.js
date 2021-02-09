@@ -48,6 +48,8 @@ app.get('/highlights',function(req,res){
     sess = req.session;
   //  if(sess.username && sess.password){ 
         newuser.getmyDocuments('6017b06505201f401833cc9f').then(function(response){
+            //const topicObj = Object.assign({},response.topic);
+            //res.setHeader('Content-Type', 'application/json');
             res.send(response);
         });
         

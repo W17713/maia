@@ -108,11 +108,23 @@ class User {
         //var query = {"userid":userid};
         return new Promise(function(resolve,reject){
             global.aggregator.query({"userid":userid},highlightsCol).then(function(res){
-                /*console.log(userid+'collection '+highlightsCol);
-                console.log(res);*/
                 resolve(res);
             });
-        });    
+        }).then(function(res){
+            console.log(res);
+                return new Promise(function(resolve,reject){
+                    var topicArray = [];
+                    console.log(userid+'collection '+highlightsCol);
+                    var i;
+                    for(i=0;i<res.length;i++){
+                        console.log(res[i].topic);
+                        topicArray.push(res[i].topic); 
+                    }
+                    
+                    
+                    resolve(topicArray);
+                });
+        });
     }
 
     //change username

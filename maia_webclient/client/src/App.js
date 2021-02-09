@@ -7,7 +7,7 @@ import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import './login.css';
 import {BrowserRouter as Router, Switch,Link,Route} from 'react-router-dom'
-import Highlightview from './components/component.signup'
+import Highlightview from './components/component.highlight'
 import NormalSignupForm from "./components/component.signup";
 const { Header, Footer,Content } = Layout;
 
@@ -79,6 +79,28 @@ const InformationBlock = () =>{
     </div>);
 }
 const App = () => {
+  if(true){
+    return (
+      <Router>
+        <div>
+          <Row>
+            <Col span={24}>
+              <Layout className="layout">
+                <Highlightview/>
+                  <Switch>
+                    <Route path="">
+                    </Route>
+                    <Route path=""> 
+                    </Route>
+                  </Switch>             
+              </Layout>
+            </Col>
+          </Row>
+        </div>
+      </Router>
+
+    );
+  }else{
   return (
     <Router>
       <div>
@@ -89,25 +111,28 @@ const App = () => {
               <div className="logo" />
               </Header>
             <Content style={{ padding: '50px 450px' }}>
-              <InformationBlock />
-            <div className="site-layout-content">
-              <NormalLoginForm/>
-            </div>
+              
+              <div className="site-layout-content">
+                <Switch>
+                  <Route exact path="/">
+                    <InformationBlock />
+                    <NormalLoginForm/>
+                  </Route>
+                  <Route path="/signup">
+                      <NormalSignupForm/>
+                  </Route>
+                </Switch>
+              </div>
+            
             </Content>
             <Footer style={{ textAlign: 'center' }}>maia ©2021 Created by SVSN, The company</Footer>
             </Layout>
           </Col>
         </Row>
-        
-          <Route exact path="/">
-            <NormalLoginForm/>
-          </Route>
-          <Route path="/signup">
-            <NormalSignupForm/>
-          </Route>
       </div>
     </Router>
   );
+}
 };
 
 
