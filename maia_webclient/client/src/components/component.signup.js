@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { Component, useState } from 'react';
 import {
   Form,
   Input,
@@ -12,6 +12,8 @@ import {
   AutoComplete,
 } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
+
+
 
 const { Option } = Select;
 
@@ -38,11 +40,46 @@ const tailFormItemLayout = {
   },
 };
 
-const NormalSignupForm = () => {
+const DisplayInfo =(props) => {
+    if(props.message!='success'){
+        return <div style={{color:'red'}}>{props.message}</div>
+    }
+}
+
+const NormalSignupForm = ()=>{
+    const [message,setMsg] = useState('');
   const [form] = Form.useForm();
 
   const onFinish = (values: any) => {
     console.log('Received values of form: ', values);
+    //if agree, send entered data for confirmation
+        const encusername = btoa(values.username);
+        const encemail = btoa(values.email);
+        const encpassword = btoa(values.password);
+        const encconfirmpass = btoa(values.confirmpass);
+    const requestOptions={
+        method: 'POST',
+        headers: {
+            'Content-Type':'application/json'
+        },
+        body: JSON.stringify(
+            {
+                username: encusername,
+                email: encemail,
+                password: encpassword,
+                confirmpass: encconfirmpass
+            }
+        )
+    }
+    if(values.agreement===true){
+        fetch('/signup',requestOptions).then(
+            async response => {
+                const dat = await response.json();
+                console.log('data '+dat.resp);
+                setMsg(dat.resp);
+            }
+        );
+    }
   };
 
   return (
@@ -57,6 +94,7 @@ const NormalSignupForm = () => {
       }}
       scrollToFirstError
     >
+        <DisplayInfo message={message}/>
       <Form.Item
         name="email"
         label="E-mail"
@@ -89,7 +127,7 @@ const NormalSignupForm = () => {
       </Form.Item>
 
       <Form.Item
-        name="confirm"
+        name="confirmpass"
         label="Confirm Password"
         dependencies={['password']}
         hasFeedback
@@ -112,7 +150,7 @@ const NormalSignupForm = () => {
       </Form.Item>
 
       <Form.Item
-        name="nickname"
+        name="username"
         label={
           <span>
             Username&nbsp;
@@ -166,7 +204,7 @@ const NormalSignupForm = () => {
         </Button>
       </Form.Item>
     </Form>
-  );
+    )
 };
 
 export default NormalSignupForm;

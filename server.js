@@ -68,14 +68,21 @@ app.post('/signup',function(req,res){
     const password=req.body.password;
     const confirmpass=req.body.confirmpass;
     //console.log('username '+username);
-    const results = newuser.signUp(username,email,password,confirmpass);
-    if(results===true){
-        //console.log(results);
-        res.redirect('/login');
-        
-    }else{
-        res.write(results);
-    }
+    newuser.signUp(username,email,password,confirmpass).then(function(results)
+    {
+        if(results===true)
+        {
+            console.log(results);
+            res.json({'resp':'success'});
+            
+        }else
+        {
+            console.log('server resp '+results);
+            res.json(results);
+        }
+
+    });
+    
     
 });
 
@@ -88,16 +95,17 @@ app.post('/login',function(req,res){
     newuser.login(req.body.username,req.body.password).then(function(resp){
         console.log(resp);
         if(resp===false){
-            res.write('<p>false</p>');
+            res.json({'resp': 'failure'});
         }else{
             if(resp=='30001'){
-                res.write('<p>user does not exist</p>');
+                res.json({'resp': 'user does not exist'});
             }else{
-                res.send(resp[0]['_id']);
-                console.log(resp[0]['_id']);
+                sess.userid = resp[0]['_id'];
+                res.json({'resp':'success','data':sess.userid});
+                /*console.log(resp[0]['_id']);
                 res.write('<p>you can logout here</p>');
                 sess.userid = resp[0]['_id'];
-                console.log(sess.userid);
+                console.log(sess.userid);*/
             }
             
             

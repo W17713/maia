@@ -14,67 +14,76 @@ class User {
 
     
     
-   signUp(username,email,password,confirmpass){
-        if(username =='' || email =='' || password=='' || confirmpass==''){
-            return 'parameters cannot be empty';
-        }else{       
-        var userquery = {"username": secure.filter(username)}
-        var mailquery ={"email": secure.filter(email)}
-        var query = {$or:[userquery,mailquery]}
-        //check if email already exists
-        global.aggregator.query(query,userCollection).then(function(returned){
-           // if(returned.length==0){
-        //if username not found in users list
-        //this.aggregator.query(userquery,userCollection).then(function(items){
-            //console.log(items.length);
-            //if user does not exist, add to users collection
-        
-                if(returned.length==0)
-                    {
-                        console.log('user does not exist');
-                        var decodedPass=secure.filter(password);
-                        var decodedCPass=secure.filter(confirmpass);
-                        //if password matches confirmpass
-                        if(decodedPass==decodedCPass){
-                            console.log('passwords are the same');
-                            //hash and store passwords
-                            secure.encrypt(decodedPass).then(function(hash){
-                                var userData =[{'username': secure.filter(username),'email':secure.filter(email),'password':hash}];
-                                global.aggregator.put(userData,userCollection);
-                                return true;
-                                /*global.aggregator.query({'username': secure.filter(username)},userCollection).then(function(res){
-                                    console.log('resp '+res);
-                                    if(res[0]['username']==secure.filter(username)){
-                                        console.log(res[0]['username']);
-                                        return true;
-                                    }else{
-                                        return 'user was not successfully created. Please try again';
-                                    }
-                                });*/
-                                console.log('userData stored '+userData);
-                            });
-                        }else{
-                            console.log('passwords do not  match');
-                            return 'passwords do not  match';
-                        }
-                        
-                }else{
-                    //console.log(returned[0]['username']);
-                    //console.log(secure.filter(username));
-                    //handle when user or email exists
-                    if(returned[0]['username']==secure.filter(username)){
-                        console.log(secure.filter(username)+' already exists');
-                        return secure.filter(username)+' already exists';
-                    }else{
-                        console.log(secure.filter(email)+' already exists');
-                        return secure.filter(email)+' already exists';
-                    }
+   signUp(username,email,password,confirmpass)
+   {
+        return new Promise(function(resolve,reject)
+        {
+            if(username =='' || email =='' || password=='' || confirmpass=='')
+            {
+                resolve({'resp':'parameters cannot be empty'});
+            }else
+            {       
+                var userquery = {"username": secure.filter(username)}
+                var mailquery ={"email": secure.filter(email)}
+                var query = {$or:[userquery,mailquery]}
+                //check if email already exists
+                global.aggregator.query(query,userCollection).then(function(returned)
+                {
+                    // if(returned.length==0){
+                //if username not found in users list
+                //this.aggregator.query(userquery,userCollection).then(function(items){
+                    //console.log(items.length);
+                    //if user does not exist, add to users collection
+                
+                        if(returned.length==0)
+                            {
+                                console.log('user does not exist');
+                                var decodedPass=secure.filter(password);
+                                var decodedCPass=secure.filter(confirmpass);
+                                //if password matches confirmpass
+                                if(decodedPass==decodedCPass)
+                                    {
+                                        console.log('passwords are the same');
+                                        //hash and store passwords
+                                        secure.encrypt(decodedPass).then(function(hash){
+                                            var userData =[{'username': secure.filter(username),'email':secure.filter(email),'password':hash}];
+                                            global.aggregator.put(userData,userCollection);
+                                            resolve(true);
+                                            /*global.aggregator.query({'username': secure.filter(username)},userCollection).then(function(res){
+                                                console.log('resp '+res);
+                                                if(res[0]['username']==secure.filter(username)){
+                                                    console.log(res[0]['username']);
+                                                    return true;
+                                                }else{
+                                                    return 'user was not successfully created. Please try again';
+                                                }
+                                            });*/
+                                            console.log('userData stored '+userData);
+                                        });
+                                    }else
+                                {
+                                    console.log('passwords do not  match');
+                                    resolve({'resp':'passwords do not  match'});
+                                }
+                                
+                            }else
+                            {
+                                //console.log(returned[0]['username']);
+                                //console.log(secure.filter(username));
+                                //handle when user or email exists
+                                if(returned[0]['username']==secure.filter(username))
+                                {
+                                    console.log(secure.filter(username)+' already exists');
+                                    resolve({'resp':secure.filter(username)+' already exists'});
+                                }else
+                                {
+                                    console.log(secure.filter(email)+' already exists');
+                                    resolve({'resp': secure.filter(email)+' already exists'});
+                                }
+                            }
+                        });
                 }
-       // });
-
-    //}
-});
-    }
+        });
         //aggregator.query(query,userCollection);
     }
     //login
