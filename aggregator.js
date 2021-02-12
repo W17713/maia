@@ -55,7 +55,11 @@ class Aggregator {
     }
 
     //query one collection
-    query(query,collectionName){  
+    query(query,collectionName,offset,limit){  
+        const start = (typeof(offset)!='undefined') ? parseInt(offset) : 0;
+        const limited =(typeof(limit)!='undefined') ? parseInt(limit) : 5;
+        //console.log('start '+start);
+        //console.log('limit '+limited);
         var dburl = this.url;
         return new Promise(function(resolve, reject) {
             mongoclient.connect(dburl,function(err,db) {
@@ -70,12 +74,12 @@ class Aggregator {
             return new Promise(function(resolve, reject) {
                 //console.log(db.db(dbName));
                 var dbo = db.db(dbName);
-                dbo.collection(collectionName).find(query).toArray(function(err,items) {
+                dbo.collection(collectionName).find(query).skip(start).limit(limited).toArray(function(err,items) {
                     if(err){
                         reject(err);
                     }else{
                         resolve(items);
-                        //console.log(items);
+                        console.log(items);
                     }
                     db.close;
                 });

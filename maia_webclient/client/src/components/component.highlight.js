@@ -45,8 +45,8 @@ class Highlightview extends Component {
     }
   
     render() {
-      //const { collapsed } = this.state;
-      const { collapsed } = '';
+      const { collapsed } = this.state;
+      //const { collapsed } = '';
       return (
         <Layout style={{ minHeight: '100vh' }}>
           <Sider collapsible collapsed={collapsed} onCollapse={this.onCollapse}>
@@ -58,14 +58,14 @@ class Highlightview extends Component {
               <Menu.Item key="2" icon={<DesktopOutlined />}>
                 Option 2
               </Menu.Item>
-              <SubMenu key="sub1" icon={<UserOutlined />} title="User">
-                <Menu.Item key="3">Tom</Menu.Item>
-                <Menu.Item key="4">Bill</Menu.Item>
-                <Menu.Item key="5">Alex</Menu.Item>
+              <SubMenu key="sub1" icon={<UserOutlined />} title="Topics">
+                <Menu.Item key="3">Highlights</Menu.Item>
+                <Menu.Item key="4">Links</Menu.Item>
+                <Menu.Item key="5">Pages</Menu.Item>
               </SubMenu>
-              <SubMenu key="sub2" icon={<TeamOutlined />} title="Team">
-                <Menu.Item key="6">Team 1</Menu.Item>
-                <Menu.Item key="8">Team 2</Menu.Item>
+              <SubMenu key="sub2" icon={<TeamOutlined />} title="Shared">
+                <Menu.Item key="6">Sent</Menu.Item>
+                <Menu.Item key="8">Received</Menu.Item>
               </SubMenu>
               <Menu.Item key="9" icon={<FileOutlined />}>
                 Files
@@ -76,15 +76,15 @@ class Highlightview extends Component {
             <Header className="site-layout-background" style={{ padding: 0 }} />
             <Content style={{ margin: '0 16px' }}>
               <Breadcrumb style={{ margin: '16px 0' }}>
-                <Breadcrumb.Item>User</Breadcrumb.Item>
-                <Breadcrumb.Item>Bill</Breadcrumb.Item>
+                <Breadcrumb.Item>Topic</Breadcrumb.Item>
+                <Breadcrumb.Item>Photo</Breadcrumb.Item>
               </Breadcrumb>
               <div className="site-layout-background" style={{ padding: 24, minHeight: 360 }}>
                   <LoadMoreList/>
                 
               </div>
             </Content>
-            <Footer style={{ textAlign: 'center' }}>maia ©2021 Created by SVSN, The company</Footer>
+            
           </Layout>
         </Layout>
       );

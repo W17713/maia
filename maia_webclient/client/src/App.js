@@ -40,7 +40,7 @@ const InformationBlock = () =>{
 class App extends Component 
 {
     render(){
-      if(false){
+      if(true){
         return (
           <Router>
             <div>

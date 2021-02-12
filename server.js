@@ -45,9 +45,12 @@ app.post('/highlights',function(req,res){
 
 
 app.get('/highlights',function(req,res){
-    sess = req.session;
+    const limit = (typeof(req.query.limit)!='undefined') ?  req.query.limit : 5;
+    const start = (typeof(req.query.offset)!='undefined') ?  req.query.offset : 0;
+    console.log(req.query);
+    console.log('start '+start);
   //  if(sess.username && sess.password){ 
-        newuser.getmyDocuments('6017b06505201f401833cc9f').then(function(response){
+        newuser.getmyDocuments('6017b06505201f401833cc9f',start,limit).then(function(response){
             //const topicObj = Object.assign({},response.topic);
             //res.setHeader('Content-Type', 'application/json');
             res.send(response);
