@@ -7,8 +7,12 @@ import {
   TeamOutlined,
   UserOutlined,
 } from '@ant-design/icons';
+import { Form} from 'antd';
 import '../highlightview.css';
 import LoadMoreList from './component.list'
+import File from './component.file'
+import Share from './component.share'
+import {BrowserRouter as Router,Switch,Route,Link,withRouter} from 'react-router-dom'
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
 /*
@@ -25,6 +29,7 @@ function Textlist(props){
 }
 <Textlist text={this.state.highlight}/>*/
 class Highlightview extends Component {
+   
     state = {
       collapsed: false,
       highlight:[]
@@ -43,53 +48,70 @@ class Highlightview extends Component {
       console.log(collapsed);
       this.setState({ collapsed });
     }
-  
+    
+    nextpath(path){
+      this.props.history.push(path);
+    }
     render() {
       const { collapsed } = this.state;
       //const { collapsed } = '';
       return (
-        <Layout style={{ minHeight: '100vh' }}>
-          <Sider collapsible collapsed={collapsed} onCollapse={this.onCollapse}>
-            <div className="logo" />
-            <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
-              <Menu.Item key="1" icon={<PieChartOutlined />}>
-                Option 1
-              </Menu.Item>
-              <Menu.Item key="2" icon={<DesktopOutlined />}>
-                Option 2
-              </Menu.Item>
-              <SubMenu key="sub1" icon={<UserOutlined />} title="Topics">
-                <Menu.Item key="3">Highlights</Menu.Item>
-                <Menu.Item key="4">Links</Menu.Item>
-                <Menu.Item key="5">Pages</Menu.Item>
-              </SubMenu>
-              <SubMenu key="sub2" icon={<TeamOutlined />} title="Shared">
-                <Menu.Item key="6">Sent</Menu.Item>
-                <Menu.Item key="8">Received</Menu.Item>
-              </SubMenu>
-              <Menu.Item key="9" icon={<FileOutlined />}>
-                Files
-              </Menu.Item>
-            </Menu>
-          </Sider>
-          <Layout className="site-layout">
-            <Header className="site-layout-background" style={{ padding: 0 }} />
-            <Content style={{ margin: '0 16px' }}>
-              <Breadcrumb style={{ margin: '16px 0' }}>
-                <Breadcrumb.Item>Topic</Breadcrumb.Item>
-                <Breadcrumb.Item>Photo</Breadcrumb.Item>
-              </Breadcrumb>
-              <div className="site-layout-background" style={{ padding: 24, minHeight: 360 }}>
-                  <LoadMoreList/>
+        <Router>
+          <Layout style={{ minHeight: '100vh' }}>
+            <Sider collapsible collapsed={collapsed} onCollapse={this.onCollapse}>
+              <div className="logo" />
+              <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
+                <Menu.Item key="1" icon={<PieChartOutlined />}>
+                  Option 1
+                </Menu.Item>
+                <Menu.Item key="2" icon={<DesktopOutlined />}>
+                  Option 2
+                </Menu.Item>
                 
-              </div>
-            </Content>
-            
+                  <SubMenu key="sub1" icon={<UserOutlined />} title="Topics">
+                  <Menu.Item key="3"><Link to="/">Highlights</Link></Menu.Item>
+                  <Menu.Item key="4"><Link to="/">Links</Link></Menu.Item>
+                  <Menu.Item key="5"><Link to="/">Pages</Link></Menu.Item>
+                  </SubMenu>
+                
+                
+                  <SubMenu key="sub2" icon={<TeamOutlined />} title="Shared">
+                  
+                  <Menu.Item key="6"><Link to="/share">Sent</Link></Menu.Item>
+                  <Menu.Item key="8"><Link to="/share">Received</Link></Menu.Item>
+                  </SubMenu>
+                
+                
+                  <Menu.Item key="9" icon={<FileOutlined />}> 
+                  <Link to="/file">Files</Link>
+                  </Menu.Item>
+                
+              </Menu>
+            </Sider>
+            <Layout className="site-layout">
+              <Header className="site-layout-background" style={{ padding: 0 }} />
+              <Content style={{ margin: '0 16px' }}>
+                <Breadcrumb style={{ margin: '16px 0' }}>
+                  <Breadcrumb.Item>Topic</Breadcrumb.Item>
+                  <Breadcrumb.Item>Photo</Breadcrumb.Item>
+                </Breadcrumb>
+                <div className="site-layout-background" style={{ padding: 24, minHeight: 360 }}>
+                    
+                    <Switch>
+                      <Route exact path="/"><LoadMoreList/></Route>
+                      <Route path="/share"><Share/></Route>
+                      <Route path="/file"><File/></Route>
+                    </Switch>
+                  
+                </div>
+              </Content>
+              
+            </Layout>
           </Layout>
-        </Layout>
+        </Router>
       );
     }
   }
 
 
-export default Highlightview;
+export default withRouter(Highlightview) ;
