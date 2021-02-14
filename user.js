@@ -121,7 +121,8 @@ class User {
             global.aggregator.query({"userid":userid},highlightsCol,start,limit).then(function(res){
                 resolve(res);
             });
-        }).then(function(res){
+        });/*
+        .then(function(res){
            // console.log(res);
                 return new Promise(function(resolve,reject){
                     var topicArray = [];
@@ -135,7 +136,7 @@ class User {
                     
                     resolve(topicArray);
                 });
-        });
+        });*/
     }
 
     //change username

@@ -7,7 +7,7 @@ import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';*/
 
 import {BrowserRouter as Router, Switch,Link,Route} from 'react-router-dom'
-import Highlightview from './components/component.highlight'
+import Homeview from './components/component.home'
 import NormalSignupForm from './components/component.signup';
 import NormalLoginForm from './components/component.login';
 const { Header, Footer,Content } = Layout;
@@ -48,13 +48,7 @@ class App extends Component
                 <Col span={24}>
                   <Layout className="layout">
                     <Head/>
-                      <Highlightview/>
-                        <Switch>
-                          <Route path="">
-                          </Route>
-                          <Route path=""> 
-                          </Route>
-                        </Switch>  
+                      <Homeview/> 
                       <Foot/>           
                   </Layout>
                 </Col>

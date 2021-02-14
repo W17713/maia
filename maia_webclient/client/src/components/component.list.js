@@ -1,7 +1,10 @@
 import {Component} from 'react';
 import { List, Avatar, Button, Skeleton } from 'antd';
-import reqwest from 'reqwest';
+import Highlightsview from './component.highlight'
+import {BrowserRouter as Router,Link, Route,Switch} from 'react-router-dom'
 import '../list.css'
+
+
 
 const count = 3;
 var start = 0;
@@ -9,17 +12,21 @@ var DataUrl;
 // = `http://localhost:3080/highlights?limit=${count}&offset=${start}`;
 
 class LoadMoreList extends Component {
-  state = {
-    initLoading: true,
-    loading: false,
-    stoploader:false,
-    data: [],
-    list: [],
-    
-  };
+  constructor(props){
+    super(props);
+    this.state = {
+      initLoading: true,
+      loading: false,
+      stoploader:false,
+      data: [],
+      list: [],
+      
+    };
+    //this.senddata=this.senddata.bind(this);
+  }
 
   componentDidMount() {
-    DataUrl = `http://localhost:3080/highlights?limit=${count}&offset=${start}`;
+    DataUrl = `http://localhost:3080/home?limit=${count}&offset=${start}`;
     this.getData(DataUrl/*res => {
       this.setState({
         initLoading: false,
@@ -29,6 +36,7 @@ class LoadMoreList extends Component {
     }*/).then(
       async res => {
         const response = await res.json();
+        console.log(response);
         this.setState({
           initLoading: false,
           data: response,//.results
@@ -59,6 +67,10 @@ class LoadMoreList extends Component {
     });*/
   }
 
+  senddata = ()=>{
+    this.props.homecallback(data);
+  }
+
   onLoadMore = () => {
     
     this.setState({
@@ -68,7 +80,7 @@ class LoadMoreList extends Component {
     console.log('before '+start);
     start=start+count;
     console.log('after '+start);
-    DataUrl = `http://localhost:3080/highlights?limit=${count}&offset=${start}`;
+    DataUrl = `http://localhost:3080/home?limit=${count}&offset=${start}`;
     console.log(DataUrl);
     this.getData(DataUrl
       /*res => {
@@ -137,31 +149,34 @@ class LoadMoreList extends Component {
       ) : null;
       
     return (
-      <List
-        className="demo-loadmore-list"
-        loading={initLoading}
-        itemLayout="horizontal"
-        loadMore={loadMore}
-        dataSource={list}
-        renderItem={item => (
-          
-          <List.Item
-            actions={[<a key="list-loadmore-edit">edit</a>, <a key="list-loadmore-more">more</a>]}
-          >
-            <Skeleton avatar title={false} loading={item.loading} active>
-              <List.Item.Meta
-                avatar={
-                  <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
-                }
-                title={<a href="https://ant.design">{item}</a>}
-                description="Ant Design, a design language for background applications, is refined by Ant UED Team"
-              />
-              <div>content</div>
-            </Skeleton>
-          </List.Item>
-          
-        )}
-      />
+  
+        <List
+          className="demo-loadmore-list"
+          loading={initLoading}
+          itemLayout="horizontal"
+          loadMore={loadMore}
+          dataSource={list}
+          renderItem={item => (
+            
+            <List.Item
+              actions={[<a key="list-loadmore-edit">edit</a>, <a key="list-loadmore-more">more</a>]}
+            >
+              <Skeleton avatar title={false} loading={item.loading} active>
+                <List.Item.Meta
+                  avatar={
+                    <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
+                  }
+                  //title={<a href="/">{item}</a>}
+                  title={<Link to="/highlights" onClick={this.senddata}>{item.topic}</Link>}
+                  description="Ant Design, a design language for background applications, is refined by Ant UED Team"
+                />
+                <div>content</div>
+              </Skeleton>
+            </List.Item>
+
+          )}
+        />
+        
     );
   }
 }

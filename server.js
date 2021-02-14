@@ -45,22 +45,16 @@ app.post('/highlights',function(req,res){
 
 
 app.get('/highlights',function(req,res){
-    const limit = (typeof(req.query.limit)!='undefined') ?  req.query.limit : 5;
-    const start = (typeof(req.query.offset)!='undefined') ?  req.query.offset : 0;
-    console.log(req.query);
-    console.log('start '+start);
-  //  if(sess.username && sess.password){ 
-        newuser.getmyDocuments('6017b06505201f401833cc9f',start,limit).then(function(response){
-            //const topicObj = Object.assign({},response.topic);
-            //res.setHeader('Content-Type', 'application/json');
-            res.send(response);
-        });
-        
-        
- //   }else{
-  //      res.send('<p>You cannot view posts if you are not logged in</p>');
-  //  }  
-//
+    /*sess= req.session;
+    //req.body.userid 6017b06505201f401833cc9f
+    newHighlight.getTopics('6017b06505201f401833cc9f').then(function(topics){
+        const topicObj = Object.assign({},topics);
+        res.setHeader('Content-Type', 'application/json');
+        res.json(topicObj);
+    });
+        */
+        res.send('OK');
+
 });
 
 
@@ -128,14 +122,16 @@ app.post('/logout',function(req,res){
 });
 
 app.get('/home',function(req,res){
-    sess= req.session;
-    //req.body.userid 6017b06505201f401833cc9f
-    newHighlight.getTopics('6017b06505201f401833cc9f').then(function(topics){
-        const topicObj = Object.assign({},topics);
-        res.setHeader('Content-Type', 'application/json');
-        res.json(topicObj);
-    });
-
+    const limit = (typeof(req.query.limit)!='undefined') ?  req.query.limit : 5;
+    const start = (typeof(req.query.offset)!='undefined') ?  req.query.offset : 0;
+    console.log(req.query);
+    console.log('start '+start);
+  //  if(sess.username && sess.password){ 
+        newuser.getmyDocuments('6017b06505201f401833cc9f',start,limit).then(function(response){
+            //const topicObj = Object.assign({},response.topic);
+            //res.setHeader('Content-Type', 'application/json');
+            res.send(response);
+        });
     /*newHighlight.getOrderedDocs('Photosynthesis').then(function(docs){
         const documents = Object.assign({},docs);
         res.json(documents);

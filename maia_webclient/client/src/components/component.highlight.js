@@ -1,117 +1,111 @@
-import {Component} from 'react';
-import { Layout, Menu, Breadcrumb } from 'antd';
-import {
-  DesktopOutlined,
-  PieChartOutlined,
-  FileOutlined,
-  TeamOutlined,
-  UserOutlined,
-} from '@ant-design/icons';
-import { Form} from 'antd';
-import '../highlightview.css';
-import LoadMoreList from './component.list'
-import File from './component.file'
-import Share from './component.share'
-import {BrowserRouter as Router,Switch,Route,Link,withRouter} from 'react-router-dom'
-const { Header, Content, Footer, Sider } = Layout;
-const { SubMenu } = Menu;
-/*
-function Textitem(props){
-    return <li>{props.value}</li>;
-}
+import React,{Component,useState} from 'react'
+import { Typography, Slider } from 'antd';
+const { Paragraph } = Typography;
 
-function Textlist(props){
-    const Text = props.text;
-    const ListItem = Text.map((textitem)=> 
-    <Textitem key={textitem.toString()} value={textitem}/>
+
+const EditHighlight = (props)=>{
+    const [editableStr, setEditableStr] = useState(props.string);
+    return (
+        <>
+            <Paragraph editable={{ onChange: setEditableStr }}>{editableStr}</Paragraph>
+        </>
     );
-    return <ul>{ListItem}</ul>;
 }
-<Textlist text={this.state.highlight}/>*/
-class Highlightview extends Component {
-   
-    state = {
-      collapsed: false,
-      highlight:[]
+/*s
+const Highlightsview = (props) => {
+    
+   const [rows, setRows] = useState(1);
+  
+    const onChange = rows => {
+        console.log('change rows '+rows);
+        setRows({ rows });
+        console.log('after change rows '+rows);
+        
+    };
+  
+    
+      //const { row } = {rows};
+      
+      var article =
+        "To be, or not to be, that is a question: Whether it is nobler in the mind to suffer. The slings and arrows of outrageous fortune Or to take arms against a sea of troubles, And by opposing end them? To die: to sleep; No more; and by a sleep to say we end The heart-ache and the thousand natural shocks That flesh is heir to, 'tis a consummation Devoutly to be wish'd. To die, to sleep To sleep- perchance to dream: ay, there's the rub! For in that sleep of death what dreams may come When we have shuffled off this mortal coil, Must give us pause. There 's the respect That makes calamity of so long life";
+        const [editableStr, setEditableStr] = useState(article);
+
+        return (
+            console.log('row in ret '+rows),
+        <>
+          <Slider value={rows} min={1} max={10} onChange={onChange} />
+          <Paragraph
+            ellipsis={{
+              rows,
+              expandable: true,
+              suffix: '--William Shakespeare',
+              onEllipsis: ellipsis => {
+                console.log('Ellipsis changed:', ellipsis);
+              },
+            }}
+            title={`${article}--William Shakespeare`}
+            editable={{ onChange: setEditableStr }}
+          >
+            {editableStr}
+          </Paragraph>
+        </>
+      );
+    
+  }*/
+
+  class Highlightsview extends Component {
+      constructor(props){
+        super(props);
+        this.state = {
+            rows: 1,
+          };
+      };
+    getData(){
+        const requestOptions = {
+            method: "GET",
+            headers: {
+                'Content-Type':'application/json'
+            }
+        };
+        const url =`/highlights?topic=${this.props.topic}`;
+        fetch(url,requestOptions);
     }
     
-    componentDidMount(){
-        fetch('/highlights').then(
-            res => res.json()
-        ).then(
-            res => this.setState({highlight:res})
-        ).catch(err => err);
-    }
-
-
-    onCollapse = collapsed => {
-      console.log(collapsed);
-      this.setState({ collapsed });
-    }
-    
-    nextpath(path){
-      this.props.history.push(path);
-    }
+  
+    onChange = rows => {
+      this.setState({ rows });
+    };
+  
     render() {
-      const { collapsed } = this.state;
-      //const { collapsed } = '';
-      return (
-        <Router>
-          <Layout style={{ minHeight: '100vh' }}>
-            <Sider collapsible collapsed={collapsed} onCollapse={this.onCollapse}>
-              <div className="logo" />
-              <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
-                <Menu.Item key="1" icon={<PieChartOutlined />}>
-                  Option 1
-                </Menu.Item>
-                <Menu.Item key="2" icon={<DesktopOutlined />}>
-                  Option 2
-                </Menu.Item>
-                
-                  <SubMenu key="sub1" icon={<UserOutlined />} title="Topics">
-                  <Menu.Item key="3"><Link to="/">Highlights</Link></Menu.Item>
-                  <Menu.Item key="4"><Link to="/">Links</Link></Menu.Item>
-                  <Menu.Item key="5"><Link to="/">Pages</Link></Menu.Item>
-                  </SubMenu>
-                
-                
-                  <SubMenu key="sub2" icon={<TeamOutlined />} title="Shared">
-                  
-                  <Menu.Item key="6"><Link to="/share">Sent</Link></Menu.Item>
-                  <Menu.Item key="8"><Link to="/share">Received</Link></Menu.Item>
-                  </SubMenu>
-                
-                
-                  <Menu.Item key="9" icon={<FileOutlined />}> 
-                  <Link to="/file">Files</Link>
-                  </Menu.Item>
-                
-              </Menu>
-            </Sider>
-            <Layout className="site-layout">
-              <Header className="site-layout-background" style={{ padding: 0 }} />
-              <Content style={{ margin: '0 16px' }}>
-                <Breadcrumb style={{ margin: '16px 0' }}>
-                  <Breadcrumb.Item>Topic</Breadcrumb.Item>
-                  <Breadcrumb.Item>Photo</Breadcrumb.Item>
-                </Breadcrumb>
-                <div className="site-layout-background" style={{ padding: 24, minHeight: 360 }}>
-                    
-                    <Switch>
-                      <Route exact path="/"><LoadMoreList/></Route>
-                      <Route path="/share"><Share/></Route>
-                      <Route path="/file"><File/></Route>
-                    </Switch>
-                  
-                </div>
-              </Content>
+      const { rows } = this.state;
+      const highlightData = this.props.topic;
+      console.log('props data '+highlightData.topic);
+      //const article = highlightData[0].text.dat;
+       // "To be, or not to be, that is a question: Whether it is nobler in the mind to suffer. The slings and arrows of outrageous fortune Or to take arms against a sea of troubles, And by opposing end them? To die: to sleep; No more; and by a sleep to say we end The heart-ache and the thousand natural shocks That flesh is heir to, 'tis a consummation Devoutly to be wish'd. To die, to sleep To sleep- perchance to dream: ay, there's the rub! For in that sleep of death what dreams may come When we have shuffled off this mortal coil, Must give us pause. There 's the respect That makes calamity of so long life";
+        
+        return (
+        <>
+          <Slider value={rows} min={1} max={10} onChange={this.onChange} />
+          <Paragraph
+            ellipsis={{
+              rows,
+              expandable: true,
+              suffix: '--William Shakespeare',
+              onEllipsis: ellipsis => {
+                console.log('Ellipsis changed:', ellipsis);
+              },
+            }}
+            title={`${highlightData.topic}--William Shakespeare`}
+          >
               
-            </Layout>
-          </Layout>
-        </Router>
+              {highlightData.topic}
+              
+            
+          </Paragraph>
+        </>
       );
     }
   }
 
 
-export default withRouter(Highlightview) ;
+export default Highlightsview;
