@@ -11,7 +11,7 @@ class Highlight{
         Agg.delete(postid,highCollection);
     }
 
-    getTopics(userid){
+    getOrderedDocs(userid){
         
         return new Promise(function(resolve, reject){
             if(userid!==''){
@@ -27,16 +27,14 @@ class Highlight{
         }); 
     }
 
-    getOrderedDocs(userid,topic){
-        const query = {$and: [{'topic':topic},{'userid':userid}]};
-        
+    getTopics(userid,offset,limit){        
             return new Promise(function(resolve,reject){
-                if(userid===undefined || topic===undefined || userid==''|| topic==''){
+                if(userid===undefined || userid==''){
                         resolve('userid or topic cannot be empty');
                     }else{
-                        Agg.getOrdered(query,'orderno',highCollection).then(function(docs){
+                        Agg.getOrdered({'userid':userid},"$topic",offset,limit,highCollection).then(function(docs){
                             //console.log('docs');
-                            //console.log(docs);
+                            console.log(docs);
                             resolve(docs);
                         });
                     }

@@ -26,7 +26,9 @@ class Aggregator {
         
     }
     //get all documents
-    getOrdered(queryObj,identifier,collectionName){
+    getOrdered(queryObj,identifier,offset, limit,collectionName){
+        const start = (typeof(offset)!='undefined') ? parseInt(offset) : 0;
+        const limited =(typeof(limit)!='undefined') ? parseInt(limit) : 10;
         var dburl = this.url;
         return new Promise(function(resolve, reject) {
             mongoclient.connect(dburl,function(err,db) {
@@ -34,14 +36,17 @@ class Aggregator {
                     reject(err);
                 }else{
                     resolve(db);
-                    //console.log('db resolved');
+                    console.log('db resolved');
                 }
             });
         }).then(function(db) {
             return new Promise(function(resolve, reject) {
                 //console.log(db.db(dbName));
                 var dbo = db.db(dbName);
-                dbo.collection(collectionName).find({$query:queryObj,$orderby:{identifier:-1}}).toArray(function(err,items) {
+                //find({$query:queryObj,$orderby:{identifier:-1}})
+                //console.log('start '+start);
+                
+                dbo.collection(collectionName).aggregate([{$group:{_id:identifier}},{$skip:start},{$limit:limited}]).toArray(function(err,items) {
                     if(err){
                         reject(err);
                     }else{

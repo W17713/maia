@@ -45,15 +45,12 @@ app.post('/highlights',function(req,res){
 
 
 app.get('/highlights',function(req,res){
-    /*sess= req.session;
-    //req.body.userid 6017b06505201f401833cc9f
-    newHighlight.getTopics('6017b06505201f401833cc9f').then(function(topics){
-        const topicObj = Object.assign({},topics);
-        res.setHeader('Content-Type', 'application/json');
-        res.json(topicObj);
+    //getmyDocuments
+    const topic = req.query.topic;
+    newuser.getmyDocuments('6017b06505201f401833cc9f',0,10).then(function(response){
+        res.json(response);
     });
-        */
-        res.send('OK');
+    
 
 });
 
@@ -127,7 +124,7 @@ app.get('/home',function(req,res){
     console.log(req.query);
     console.log('start '+start);
   //  if(sess.username && sess.password){ 
-        newuser.getmyDocuments('6017b06505201f401833cc9f',start,limit).then(function(response){
+        newHighlight.getTopics('6017b06505201f401833cc9f',start,limit).then(function(response){
             //const topicObj = Object.assign({},response.topic);
             //res.setHeader('Content-Type', 'application/json');
             res.send(response);

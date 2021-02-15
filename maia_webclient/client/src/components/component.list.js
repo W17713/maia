@@ -55,7 +55,7 @@ class LoadMoreList extends Component {
     //fetch(DataUrl,requestOptions);
     return new Promise(function(resolve,reject){
       resolve(fetch(DataUrl,requestOptions));
-    });
+    }).catch(err => err);
     /*reqwest({
       url: DataUrl,
       type: 'json',
@@ -67,7 +67,7 @@ class LoadMoreList extends Component {
     });*/
   }
 
-  senddata = ()=>{
+  senddata = (data)=>{
     this.props.homecallback(data);
   }
 
@@ -167,7 +167,7 @@ class LoadMoreList extends Component {
                     <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
                   }
                   //title={<a href="/">{item}</a>}
-                  title={<Link to="/highlights" onClick={this.senddata}>{item.topic}</Link>}
+                  title={<Link to="/highlights" onClick={() => this.senddata(item._id)}>{item._id}</Link>}
                   description="Ant Design, a design language for background applications, is refined by Ant UED Team"
                 />
                 <div>content</div>

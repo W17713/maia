@@ -62,6 +62,7 @@ class Homeview extends Component {
     
     render() {
       const { collapsed } = this.state;
+      console.log('home state topic '+this.state.topic);
       //const { collapsed } = '';
       return (
         <Router>
