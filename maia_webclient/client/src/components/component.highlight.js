@@ -58,6 +58,7 @@ const Highlightsview = (props) => {
         super(props);
         this.state = {
             rows: 1,
+            highlights : []
           };
       };
     getData(){
@@ -68,21 +69,35 @@ const Highlightsview = (props) => {
             }
         };
         const url =`/highlights?topic=${this.props.topic}`;
-        fetch(url,requestOptions);
+        console.log('url '+url);
+        return new Promise(function(resolve,reject){
+            resolve(fetch(url,requestOptions));
+        });
     }
     
+    componentDidMount(){
+        this.getData().then(async response => {
+            const reply = await response.json();
+            this.setState({highlights:reply});
+            console.log('mount');
+            console.log(this.state.highlights[0]['text']['dat']);
+        } );
+    }
   
     onChange = rows => {
       this.setState({ rows });
     };
   
     render() {
-      const { rows } = this.state;
+        console.log('topic:'+this.props.topic);
+      const { rows} = this.state;
+      //const { tail } = this.state.highlights;
       const highlightData = this.props.topic;
-      console.log('props data '+highlightData.topic);
+      console.log(this.state.highlights);
       //const article = highlightData[0].text.dat;
        // "To be, or not to be, that is a question: Whether it is nobler in the mind to suffer. The slings and arrows of outrageous fortune Or to take arms against a sea of troubles, And by opposing end them? To die: to sleep; No more; and by a sleep to say we end The heart-ache and the thousand natural shocks That flesh is heir to, 'tis a consummation Devoutly to be wish'd. To die, to sleep To sleep- perchance to dream: ay, there's the rub! For in that sleep of death what dreams may come When we have shuffled off this mortal coil, Must give us pause. There 's the respect That makes calamity of so long life";
-        
+        const item = this.state.highlights;
+        console.log('rows'+rows);
         return (
         <>
           <Slider value={rows} min={1} max={10} onChange={this.onChange} />
@@ -90,15 +105,20 @@ const Highlightsview = (props) => {
             ellipsis={{
               rows,
               expandable: true,
-              suffix: '--William Shakespeare',
+              suffix: this.state.highlights.date,
               onEllipsis: ellipsis => {
                 console.log('Ellipsis changed:', ellipsis);
               },
             }}
-            title={`${highlightData.topic}--William Shakespeare`}
+            title={`${this.props.topic}--${this.state.highlights.date}`}
           >
               
-              {highlightData.topic}
+              {
+                this.state.highlights.map((item)=>
+                  
+                  <EditHighlight string={item.text.dat} />
+                )
+              }
               
             
           </Paragraph>
