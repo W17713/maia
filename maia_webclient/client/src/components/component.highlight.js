@@ -100,7 +100,7 @@ const Highlightsview = (props) => {
         console.log('rows'+rows);
         return (
         <>
-        <div>{this.props.topic}</div>
+        <div>{this.props.topic}<span> ({this.state.highlights.length})</span></div>
           <Slider value={rows} min={1} max={10} onChange={this.onChange} />
           <Paragraph
             ellipsis={{
