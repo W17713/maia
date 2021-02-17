@@ -1,5 +1,5 @@
 import {Component} from 'react';
-import { List, Avatar, Button, Skeleton } from 'antd';
+import { List, Avatar, Button, Skeleton,Result } from 'antd';
 import Highlightsview from './component.highlight'
 import {BrowserRouter as Router,Link, Route,Switch} from 'react-router-dom'
 import '../list.css'
@@ -18,6 +18,7 @@ class LoadMoreList extends Component {
       initLoading: true,
       loading: false,
       stoploader:false,
+      fetched:false,
       data: [],
       list: [],
       
@@ -41,9 +42,10 @@ class LoadMoreList extends Component {
           initLoading: false,
           data: response,//.results
           list: response,
+          fetched:true
         });
       }
-    );
+    ).catch(err=>{this.handleError(err.message)});
   }
 
   getData (DataUrl) {
@@ -55,7 +57,7 @@ class LoadMoreList extends Component {
     //fetch(DataUrl,requestOptions);
     return new Promise(function(resolve,reject){
       resolve(fetch(DataUrl,requestOptions));
-    }).catch(err => err);
+    }).catch(err=>{this.handleError(err.message)});
     /*reqwest({
       url: DataUrl,
       type: 'json',
@@ -65,6 +67,21 @@ class LoadMoreList extends Component {
         callback(res);
       },
     });*/
+  }
+
+  handleError(err){
+    if(err=='Failed to fetch'){
+      this.setState({fetched:false});
+    }
+
+    if(err=="Cannot read property 'json' of undefined"){
+      this.setState({fetched:false});
+    }
+  }
+
+  reload(){
+    console.log('reloaded');
+    window.location.reload()
   }
 
   senddata = (data)=>{
@@ -128,12 +145,12 @@ class LoadMoreList extends Component {
         },
       );
     }
-    });
+    }).catch(err=>{this.handleError(err.message)});
     
   };
 
   render() {
-    const { initLoading, loading, list,stoploader } = this.state;
+    const { initLoading, loading, list,stoploader,fetched } = this.state;
     const loadMore =
       !initLoading && !loading ? (
         <div
@@ -147,37 +164,48 @@ class LoadMoreList extends Component {
           <Button onClick={this.onLoadMore}>load more</Button>
         </div>
       ) : null;
-      
-    return (
-  
-        <List
-          className="demo-loadmore-list"
-          loading={initLoading}
-          itemLayout="horizontal"
-          loadMore={loadMore}
-          dataSource={list}
-          renderItem={item => (
-            
-            <List.Item
-              actions={[<a key="list-loadmore-edit">edit</a>, <a key="list-loadmore-more">more</a>]}
-            >
-              <Skeleton avatar title={false} loading={item.loading} active>
-                <List.Item.Meta
-                  avatar={
-                    <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
-                  }
-                  //title={<a href="/">{item}</a>}
-                  title={<Link to="/highlights" onClick={() => this.senddata(item._id)}>{item._id}</Link>}
-                  description="Ant Design, a design language for background applications, is refined by Ant UED Team"
-                />
-                <div>content</div>
-              </Skeleton>
-            </List.Item>
+      if(fetched===false && initLoading===true)
+      {
+        return (
+            <Result
+              status="500"
+              title="500"
+              subTitle="Sorry, something went wrong."
+              extra={<Button type="primary" onClick={this.reload}>Back Home</Button>}
+            />
+        );
+      }else{     
+            return (
+          
+                <List
+                  className="demo-loadmore-list"
+                  loading={initLoading}
+                  itemLayout="horizontal"
+                  loadMore={loadMore}
+                  dataSource={list}
+                  renderItem={item => (
+                    
+                    <List.Item
+                      actions={[<a key="list-loadmore-edit">edit</a>, <a key="list-loadmore-more">more</a>]}
+                    >
+                      <Skeleton avatar title={false} loading={item.loading} active>
+                        <List.Item.Meta
+                          avatar={
+                            <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
+                          }
+                          //title={<a href="/">{item}</a>}
+                          title={<Link to="/highlights" onClick={() => this.senddata(item._id)}>{item._id}</Link>}
+                          description="Ant Design, a design language for background applications, is refined by Ant UED Team"
+                        />
+                        <div>content</div>
+                      </Skeleton>
+                    </List.Item>
 
-          )}
-        />
-        
-    );
+                  )}
+                />
+                
+            );
+  }
   }
 }
 

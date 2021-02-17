@@ -100,17 +100,18 @@ const Highlightsview = (props) => {
         console.log('rows'+rows);
         return (
         <>
+        <div>{this.props.topic}</div>
           <Slider value={rows} min={1} max={10} onChange={this.onChange} />
           <Paragraph
             ellipsis={{
               rows,
               expandable: true,
-              suffix: this.state.highlights.date,
+              //suffix: '-- author',
               onEllipsis: ellipsis => {
                 console.log('Ellipsis changed:', ellipsis);
               },
             }}
-            title={`${this.props.topic}--${this.state.highlights.date}`}
+            title={`${this.props.topic}-- author`}
           >
               
               {
