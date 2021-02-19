@@ -7,12 +7,15 @@ import '../login.css';
 import {BrowserRouter as Router, Switch,Link,Route} from 'react-router-dom'
 
 const DisplayInfo = (props)=> {
-    if(props.message!='success'){
+    //if(props.message!='success'){
         return <div style={{color:'red'}}>{props.message}</div>
-    }
+    //}
 }
 
-const NormalLoginForm  = () => {
+
+
+const NormalLoginForm  = (props) => {
+    
     const [msg,setMsg] = useState('');
     const onFinish = (values) => {
       console.log('Received values of form: ', values);
@@ -32,11 +35,16 @@ const NormalLoginForm  = () => {
     fetch('/login',requestOptions)
     .then(async response => {
       const responseData = await response.json();
-      console.log(responseData);
+      console.log(responseData.data);
+      if(responseData.resp=='success'){
+        props.appcallback(responseData.data);
+      }
       setMsg(responseData.resp);
     });
     };
-  
+    
+    const errorMessage = (msg!='success') ? <DisplayInfo message={msg}/> : null;
+    
     return (
       
       <Form
@@ -47,7 +55,7 @@ const NormalLoginForm  = () => {
         }}
         onFinish={onFinish}
       >
-          <DisplayInfo message={msg}/>
+          {errorMessage}
         <Form.Item
           name="username"
           rules={[
