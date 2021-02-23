@@ -11,6 +11,8 @@ import Homeview from './components/component.home'
 import NormalSignupForm from './components/component.signup';
 import NormalLoginForm from './components/component.login';
 import session from "express-session";
+import Error403 from './components/component.403'
+import Error404 from './components/component.404'
 const { Header, Footer,Content } = Layout;
 
 
@@ -70,9 +72,14 @@ class App extends Component
               <Row>
                 <Col span={24}>
                   <Layout className="layout">
-                    <Head/>
-                      <Homeview/> 
-                      <Foot/>           
+                    <Switch>
+                      <Redirect exact from='/' to='/home'/>          
+                      <Route exact path="/home">
+                        <Head/>
+                        <Homeview/> 
+                        <Foot/>
+                      </Route> 
+                    </Switch>
                   </Layout>
                 </Col>
               </Row>
@@ -92,12 +99,22 @@ class App extends Component
                   <div className="site-layout-content">
                     <Switch>
                       <Route exact path="/">
+                        <Redirect to='/login'/>
+                      </Route>
+                      <Route  path="/signup">
+                          <NormalSignupForm/>
+                      </Route>
+                      <Route  path="/login">
                         <InformationBlock />
                         <NormalLoginForm appcallback={this.recieveloginstate}/>
                       </Route>
-                      <Route path="/signup">
-                          <NormalSignupForm/>
+                      <Route  path="/home">
+                        <Error403 />
                       </Route>
+                      <Route  path="/*">
+                        <Error404 />
+                      </Route>
+                      
                     </Switch>
                   </div>
                 </Content>
