@@ -37,7 +37,7 @@ const NormalLoginForm  = (props) => {
       const responseData = await response.json();
       console.log(responseData.data);
       if(responseData.resp=='success'){
-        props.appcallback(responseData.data);
+        props.appcallback(responseData.data,responseData.username);
       }
       setMsg(responseData.resp);
     });

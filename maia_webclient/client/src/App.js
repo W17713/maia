@@ -1,11 +1,17 @@
 import React,{ Component } from "react";
-import { Layout } from 'antd';
+import { Layout,Menu, Dropdown,Modal,Button } from 'antd';
 import 'antd/dist/antd.css';
 import {Row, Col  } from 'antd';
 /*import { Form, Checkbox } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';*/
-
+import {
+  UserOutlined,
+  SettingOutlined,
+  LogoutOutlined,
+  DownOutlined,
+  ExclamationCircleOutlined 
+} from '@ant-design/icons';
 import {BrowserRouter as Router, Switch,Link,Route,Redirect} from 'react-router-dom'
 import Homeview from './components/component.home'
 import NormalSignupForm from './components/component.signup';
@@ -15,11 +21,61 @@ import Error403 from './components/component.403'
 import Error404 from './components/component.404'
 const { Header, Footer,Content } = Layout;
 
+const { confirm } = Modal;
 
-const Head = ()=>{
+const showConfirm = () => {
+  const requestOptions={
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }
+  confirm({
+    title: 'Do you want to logout of maia?',
+    icon: <ExclamationCircleOutlined />,
+    content: 'You can always log back in at any time',
+    onOk() {
+      console.log('OK');
+      fetch('/logout',requestOptions).then(async response =>{
+        const resp = await response.json();
+        if(resp.resp =='destroyed'){
+          console.log('loggin out');
+          sessionStorage.clear();
+          window.location.href='/'
+        }
+      });
+      
+    },
+    onCancel() {
+      console.log('Cancel');
+    },
+  });
+}
+
+const Head = (props)=>{
+  const menu = (
+    <Menu>
+      <Menu.Item key="0">
+        <a href="/settings"><SettingOutlined />Settings</a>
+      </Menu.Item>
+      <Menu.Divider />
+      <Menu.Item key="1">
+        <a onClick={showConfirm}><LogoutOutlined />Logout</a>
+      </Menu.Item>
+      <Menu.Divider />
+    </Menu>
+  );
+  const username = JSON.parse(sessionStorage.getItem('user'));
   return (
     <Header>
       <div className="logo" />
+      {(props.loggedin==true)? <>
+        <Dropdown overlay={menu} trigger={['click']}>
+          <a className="ant-dropdown-link" onClick={e => e.preventDefault()} style={{color:'white',fontSize:18}}>
+            <UserOutlined style={{color:'white'}} /> { username } <DownOutlined style={{color:'white'}} />
+          </a>
+        </Dropdown>
+         </>: null}
     </Header>
   );
 }
@@ -47,15 +103,17 @@ class App extends Component
     super(props);
     this.state = {
       hasToken: false,
+      user:''
     }
     this.recieveloginstate = this.recieveloginstate.bind(this);
     this.getToken = this.getToken.bind(this);
   }
 
-    recieveloginstate(data){
+    recieveloginstate(data,data2){
       sessionStorage.setItem('token',JSON.stringify(data));
+      sessionStorage.setItem('user',JSON.stringify(data2));
       this.setState({hasToken:true});
-      console.log('set state true');
+      console.log('user'+data2);
     }
     getToken(){
       const token = sessionStorage.getItem('token');
@@ -78,7 +136,7 @@ class App extends Component
                     <Switch>
                       <Redirect exact from='/' to='/home'/>          
                       <Route exact path="/home">
-                        <Head/>
+                        <Head loggedin={true} loggeduser={this.state.user}/>
                         <Homeview/> 
                         <Foot/>
                       </Route> 

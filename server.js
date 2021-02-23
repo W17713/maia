@@ -95,7 +95,8 @@ app.post('/login',function(req,res){
                 res.json({'resp': 'user does not exist'});
             }else{
                 sess.userid = resp[0]['_id'];
-                res.json({'resp':'success','data':sess.userid});
+                sess.username=resp[0]['username'];
+                res.json({'resp':'success','data':sess.userid,'username':sess.username});
                 /*console.log(resp[0]['_id']);
                 res.write('<p>you can logout here</p>');
                 sess.userid = resp[0]['_id'];
