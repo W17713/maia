@@ -114,7 +114,7 @@ app.post('/logout',function(req,res){
             console.log(err);
         }else{
             console.log('session destroyed');
-            res.redirect('/login');
+            res.send({resp:'destroyed'});
         }
     });
 });
