@@ -121,10 +121,11 @@ app.post('/logout',function(req,res){
 app.get('/home',function(req,res){
     const limit = (typeof(req.query.limit)!='undefined') ?  req.query.limit : 5;
     const start = (typeof(req.query.offset)!='undefined') ?  req.query.offset : 0;
+    const userid = (typeof(req.query.user)!='undefined') ?  req.query.user : null;
     console.log(req.query);
-    console.log('start '+start);
+    console.log('start '+userid);
   //  if(sess.username && sess.password){ 
-        newHighlight.getTopics('6017b06505201f401833cc9f',start,limit).then(function(response){
+        newHighlight.getTopics(userid,start,limit).then(function(response){
             //const topicObj = Object.assign({},response.topic);
             //res.setHeader('Content-Type', 'application/json');
             res.send(response);

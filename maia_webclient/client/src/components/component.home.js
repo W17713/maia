@@ -35,7 +35,8 @@ class Homeview extends Component {
       super(props);
       this.state = {
         collapsed: false,
-        topic:''
+        topic:'',
+        hastoken: false
       };
       this.receivedata=this.receivedata.bind(this);
     }
@@ -45,12 +46,13 @@ class Homeview extends Component {
     }
 
     componentDidMount(){
+        this.receivedata();
         /*fetch('/home').then(
             res => res.json()
         ).then(
             res => this.setState({highlight:res})
         ).catch(err => err);*/
-        
+        this.setState({hastoken:true});
     }
 
 

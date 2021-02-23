@@ -18,7 +18,7 @@ class LoadMoreList extends Component {
       initLoading: true,
       loading: false,
       stoploader:false,
-      fetched:false,
+      notfetched:true,
       data: [],
       list: [],
       
@@ -27,7 +27,9 @@ class LoadMoreList extends Component {
   }
 
   componentDidMount() {
-    DataUrl = `http://localhost:3080/home?limit=${count}&offset=${start}`;
+    const myID =JSON.parse(sessionStorage.getItem('token'));
+    console.log('myID '+myID);
+    DataUrl = `http://localhost:3080/home?limit=${count}&offset=${start}&user=${myID}`;
     this.getData(DataUrl/*res => {
       this.setState({
         initLoading: false,
@@ -42,7 +44,7 @@ class LoadMoreList extends Component {
           initLoading: false,
           data: response,//.results
           list: response,
-          fetched:true
+          //notfetched:false
         });
       }
     ).catch(err=>{this.handleError(err.message)});
@@ -71,11 +73,11 @@ class LoadMoreList extends Component {
 
   handleError(err){
     if(err=='Failed to fetch'){
-      this.setState({fetched:false});
+      this.setState({notfetched:false});
     }
 
     if(err=="Cannot read property 'json' of undefined"){
-      this.setState({fetched:false});
+      this.setState({notfetched:false});
     }
   }
 
@@ -150,7 +152,7 @@ class LoadMoreList extends Component {
   };
 
   render() {
-    const { initLoading, loading, list,stoploader,fetched } = this.state;
+    const { initLoading, loading, list,stoploader,notfetched } = this.state;
     const loadMore =
       !initLoading && !loading ? (
         <div
@@ -164,7 +166,7 @@ class LoadMoreList extends Component {
           <Button onClick={this.onLoadMore}>load more</Button>
         </div>
       ) : null;
-      if(fetched===false && initLoading===true)
+      if(notfetched===false && initLoading===true)
       {
         return (
             <Result
@@ -176,7 +178,8 @@ class LoadMoreList extends Component {
         );
       }else{     
             return (
-          
+              <>
+              <div><span>Topics ({this.state.data.length})</span></div>
                 <List
                   className="demo-loadmore-list"
                   loading={initLoading}
@@ -188,6 +191,7 @@ class LoadMoreList extends Component {
                     <List.Item
                       actions={[<a key="list-loadmore-edit">edit</a>, <a key="list-loadmore-more">more</a>]}
                     >
+                      
                       <Skeleton avatar title={false} loading={item.loading} active>
                         <List.Item.Meta
                           avatar={
@@ -203,7 +207,7 @@ class LoadMoreList extends Component {
 
                   )}
                 />
-                
+              </>
             );
   }
   }

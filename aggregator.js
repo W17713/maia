@@ -46,7 +46,7 @@ class Aggregator {
                 //find({$query:queryObj,$orderby:{identifier:-1}})
                 //console.log('start '+start);
                 
-                dbo.collection(collectionName).aggregate([{$group:{_id:identifier}},{$skip:start},{$limit:limited}]).toArray(function(err,items) {
+                dbo.collection(collectionName).aggregate([{$match:queryObj},{$group:{_id:identifier}},{$skip:start},{$limit:limited}]).toArray(function(err,items) {
                     if(err){
                         reject(err);
                     }else{
@@ -138,6 +138,34 @@ class Aggregator {
                 console.log('1 doc deleted');
                 db.close();
             });
+        });
+    }
+
+    count(query,collectionName){
+        var dburl = this.url;
+        return new Promise(function(resolve, reject) {
+            mongoclient.connect(dburl,function(err,db) {
+                if(err){
+                    reject(err);
+                }else{
+                    resolve(db);
+                    //console.log('db resolved');
+                }
+            });
+        }).then(function(db) {
+            return new Promise(function(resolve, reject) {
+                //console.log(db.db(dbName));
+                var dbo = db.db(dbName);
+                dbo.collection(collectionName).find(query).count().toArray(function(err,items) {
+                    if(err){
+                        reject(err);
+                    }else{
+                        resolve(items);
+                        console.log(items);
+                    }
+                    db.close;
+                });
+            }).catch(err=>{console.log('caught ',err.message)});
         });
     }
 
