@@ -55,13 +55,16 @@ class App extends Component
     recieveloginstate(data){
       sessionStorage.setItem('token',JSON.stringify(data));
       this.setState({hasToken:true});
+      console.log('set state true');
     }
     getToken(){
       const token = sessionStorage.getItem('token');
       const tokenpair = JSON.parse(token);
       return tokenpair;
     }
-
+    componentDidMount(){
+      this.getToken();
+    }
 
     render(){
       const token = this.getToken();
@@ -79,6 +82,12 @@ class App extends Component
                         <Homeview/> 
                         <Foot/>
                       </Route> 
+                      <Route  path="/signup">
+                        <Redirect to='/'/>
+                      </Route>
+                      <Route  path="/login">
+                        <Redirect to='/'/>
+                      </Route>
                     </Switch>
                   </Layout>
                 </Col>
@@ -98,18 +107,21 @@ class App extends Component
                 <Content style={{ padding: '50px 450px' }}>
                   <div className="site-layout-content">
                     <Switch>
-                      <Route exact path="/">
-                        <Redirect to='/login'/>
+                      <Route  exact path="/">
+                        <InformationBlock />
+                        <NormalLoginForm appcallback={this.recieveloginstate}/>
                       </Route>
                       <Route  path="/signup">
                           <NormalSignupForm/>
                       </Route>
                       <Route  path="/login">
-                        <InformationBlock />
-                        <NormalLoginForm appcallback={this.recieveloginstate}/>
+                        <Redirect to='/'/>
                       </Route>
                       <Route  path="/home">
-                        <Error403 />
+                        <Redirect to='/'/>
+                      </Route>
+                      <Route path='/admin'>
+                        <Error403/>
                       </Route>
                       <Route  path="/*">
                         <Error404 />

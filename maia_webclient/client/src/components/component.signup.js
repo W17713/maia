@@ -12,6 +12,8 @@ import {
   AutoComplete,
 } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
+import {BrowserRouter as Router, Switch,Route,useHistory} from 'react-router-dom'
+import NormalLoginForm from './component.login';
 
 
 
@@ -49,7 +51,7 @@ const DisplayInfo =(props) => {
 const NormalSignupForm = ()=>{
     const [message,setMsg] = useState('');
   const [form] = Form.useForm();
-
+  const history = useHistory();
   const onFinish = (values: any) => {
     console.log('Received values of form: ', values);
     //if agree, send entered data for confirmation
@@ -76,7 +78,12 @@ const NormalSignupForm = ()=>{
             async response => {
                 const dat = await response.json();
                 console.log('data '+dat.resp);
-                setMsg(dat.resp);
+                if(dat.resp=='success'){
+                  //history.push('/login')
+                  window.location.href='/'
+                }else{
+                  setMsg(dat.resp);
+                }
             }
         );
     }
@@ -165,24 +172,6 @@ const NormalSignupForm = ()=>{
       </Form.Item>
 
 
-
-      <Form.Item label="Captcha" extra="We must make sure that your are a human.">
-        <Row gutter={8}>
-          <Col span={12}>
-            <Form.Item
-              name="captcha"
-              noStyle
-              rules={[{ required: true, message: 'Please input the captcha you got!' }]}
-            >
-              <Input />
-            </Form.Item>
-          </Col>
-          <Col span={12}>
-            <Button>Get captcha</Button>
-          </Col>
-        </Row>
-      </Form.Item>
-
       <Form.Item
         name="agreement"
         valuePropName="checked"
@@ -208,5 +197,20 @@ const NormalSignupForm = ()=>{
 };
 
 export default NormalSignupForm;
-
+ /*<Form.Item label="Captcha" extra="We must make sure that your are human.">
+        <Row gutter={8}>
+          <Col span={12}>
+            <Form.Item
+              name="captcha"
+              noStyle
+              rules={[{ required: true, message: 'Please input the captcha you got!' }]}
+            >
+              <Input />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Button>Get captcha</Button>
+          </Col>
+        </Row>
+      </Form.Item>*/
 
