@@ -19,6 +19,7 @@ import NormalLoginForm from './components/component.login';
 import session from "express-session";
 import Error403 from './components/component.403'
 import Error404 from './components/component.404'
+import Sider from './components/component.settings'
 const { Header, Footer,Content } = Layout;
 
 const { confirm } = Modal;
@@ -41,6 +42,7 @@ const showConfirm = () => {
         if(resp.resp =='destroyed'){
           console.log('loggin out');
           sessionStorage.clear();
+          postMessage({sender:'logout',source:'maia'},'*');
           window.location.href='/'
         }
       });
@@ -111,7 +113,10 @@ class App extends Component
 
     recieveloginstate(data,data2){
       sessionStorage.setItem('token',JSON.stringify(data));
+      localStorage.setItem('token',JSON.stringify(data));
       sessionStorage.setItem('user',JSON.stringify(data2));
+      window.postMessage({sender:'mydash',source:'maia',message:data2},'*');
+      console.log('message posted');
       this.setState({hasToken:true});
       console.log('user'+data2);
     }
@@ -145,6 +150,9 @@ class App extends Component
                       </Route>
                       <Route  path="/login">
                         <Redirect to='/'/>
+                      </Route>
+                      <Route  path="/settings">
+                        <Sider />
                       </Route>
                     </Switch>
                   </Layout>

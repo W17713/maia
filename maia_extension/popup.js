@@ -15,10 +15,18 @@ subbtnState.style.display ="none";
 console.log(document.getElementById("addBtn"));
 //console.log(topicState);
 
-document.getElementById('navbody').addEventListener('load',showphHigh);
-function showphHigh(){
-	if(back.badgeCount>0){
+//document.getElementById('navbody').addEventListener('load',showphHigh);
+window.onload = function checkLogin(){
+	/*if(back.badgeCount>0){
 		document.getElementById('pghighlight').innerHTML("12");
+	}*/
+	const loggedin = back.sessionStorage.getItem('token');
+	if(loggedin){
+		document.getElementsByClassName('iconhead')[0].style.display='block';
+		document.getElementById('username').innerHTML=JSON.parse(loggedin);
+	}else{
+		document.getElementsByClassName('iconhead')[0].style.display='none';
+		document.getElementById('username').innerHTML="not signed in";
 	}
 }
 document.getElementById('pghighlight').innerHTML=back.badgeCount;
@@ -109,7 +117,8 @@ function postTopic(){
 //push all data to backend 
 
 const Http = new XMLHttpRequest();
-const url = "http://localhost:3000/postHighlights";
+const url = "http://localhost:3080/highlights";
+const loginurl="http://localhost:3080/highlights"
 document.getElementById('feedback').addEventListener('click',pushStack);
 function pushStack(){
 	
@@ -131,5 +140,15 @@ function pushStack(){
 	});
 }
 
+document.getElementById('navbody').addEventListener('load',checkLogin);
+
+function checkLogin(){
+	const loggedin = sessionStorage.getItem('token');
+	if(loggedin){
+		document.getElementById('username').innerHTML(loggedin);
+	}else{
+		document.getElementById('username').innerHTML("not signed in");
+	}
+}
 
 

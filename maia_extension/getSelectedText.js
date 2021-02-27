@@ -42,33 +42,45 @@ var msg='';
 var msgObj={};
 
 const Http = new XMLHttpRequest();
-const url = "http://localhost:3000/postHighlights";
+const url = "http://localhost:3080/highlights";
 
 function receiverFxn(req,sender,sendresp){
-	badgeCount=badgeCount+req.count;
-	//console.log(req);
-	//generate key from badge count
-	msgObj['key'+badgeCount]=req.message;
-	
-	//console.log('msgOBJ: '+msgObj);
-	
-chrome.storage.local.set(msgObj, function(){
-		if(Err){
-			console.log(Err);
-		}else{
-			chrome.browserAction.setBadgeText({text:badgeCount.toString()});
-			chrome.storage.local.get(null,function (results){
-			console.log(results);
-	}); 
-		}
+	if(req.sender=='mydash')
+	{
+		console.log('logindat '+req.message)
+		const user=req.message;
+		sessionStorage.setItem('token',JSON.stringify(user));
+	}else if(req.sender=='logout'){
+		sessionStorage.clear();
+	}
+	else
+	{
+		badgeCount=badgeCount+req.count;
+		//console.log(req);
+		//generate key from badge count
+		msgObj['key'+badgeCount]=req.message;
 		
-	});
-	
-	chrome.storage.local.get(null,function (results){
-		console.log(results)
-	});
-	
-	chrome.runtime.sendMessage(req);
+		//console.log('msgOBJ: '+msgObj);
+		//console.log('login state '+req.loginstate)
+		chrome.storage.local.set(msgObj, function(){
+				if(Err){
+					console.log(Err);
+				}else{
+					chrome.browserAction.setBadgeText({text:badgeCount.toString()});
+					chrome.storage.local.get(null,function (results){
+					console.log(results);
+			}); 
+				}
+				
+			});
+		
+		chrome.storage.local.get(null,function (results){
+			console.log(results)
+		});
+		
+		chrome.runtime.sendMessage(req);
+
+}
 }
 
 

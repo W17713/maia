@@ -28,17 +28,42 @@ GetSelectedText();*/
 
 window.addEventListener('mouseup',Released);
 
+const loginstate= '';
 function Released(){
 	//stringify selection object
 	let counter=1;
 	let msg='';
 	let selectedData = window.getSelection().toString();
+    const loginstate = sessionStorage.getItem('token');
 	//send string to background js, if not empty
 	if(selectedData.length>0) {
 	msg={message:selectedData,count:counter};
-	chrome.runtime.sendMessage(msg);
+	if(msg !== '' || typeof(msg) !== undefined){
+        chrome.runtime.sendMessage(msg);
+    }
 	//console.log(msg);
 	}else{
 		selectedData="$emp";
 	}
 }
+
+window.addEventListener('message',checklogin);
+
+function checklogin(e){
+    if(e.origin !== 'http://localhost:3000')
+        return;
+    if(e.data.source !=='maia')
+        return;
+    console.log(e.data);
+    var message = e.data;
+    if(message !== '' || typeof(message) !== undefined){
+        chrome.runtime.sendMessage(message);
+    }
+}
+
+/*window.addEventListener('onload',checklogin);
+
+function checklogin(){
+    const loginstate = sessionStorage.getItem('token');
+    console.log('token '+loginstate);
+}*/
