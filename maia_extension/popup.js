@@ -121,25 +121,31 @@ const url = "http://localhost:3080/highlights";
 const loginurl="http://localhost:3080/highlights"
 document.getElementById('feedback').addEventListener('click',pushStack);
 function pushStack(){
-	
-	chrome.storage.local.get(null,function(data){
-	console.log("ok");
-	//Http.open("GET",url);
-	Http.open("POST",url,true);
-	Http.setRequestHeader("Content-Type","application/json;charset=UTF-8");
-	Http.send(JSON.stringify({userdata:{data}}));
-	console.log(JSON.stringify({userdata:{data}}));
-	
-	//	Http.send();
-	Http.onreadystatechange = function(){
-		if(this.readyState==4 && this.status==200){
-			console.log("Resp is: "+Http.responseText);
+	const token = back.sessionStorage.getItem('token');
+	console.log('popup token '+token);
+	if(token){
+		chrome.storage.local.get(null,function(data){
+			console.log(token);
+			//Http.open("GET",url);
+			Http.open("POST",url,true);
+			Http.setRequestHeader("Content-Type","application/json;charset=UTF-8");
+			Http.send(JSON.stringify({userdata:{data}}));
+			console.log(JSON.stringify({userdata:{data}}));
 			
-		}
+			//	Http.send();
+			Http.onreadystatechange = function(){
+				if(this.readyState==4 && this.status==200){
+					console.log("Resp is: "+Http.responseText);
+					document.getElementById('message').innerHTML = 'Stack pushed successfully';
+				}
+			}
+			});
+	}else{
+		document.getElementById('message').innerHTML="Click on 'show my board' to login before you can push a stack";
 	}
-	});
-}
 
+}
+/*
 document.getElementById('navbody').addEventListener('load',checkLogin);
 
 function checkLogin(){
@@ -149,6 +155,6 @@ function checkLogin(){
 	}else{
 		document.getElementById('username').innerHTML("not signed in");
 	}
-}
+}*/
 
 
