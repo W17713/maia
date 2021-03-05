@@ -68,8 +68,9 @@ const Highlightsview = (props) => {
                 'Content-Type':'application/json'
             }
         };
-        const url =`/highlights?topic=${this.props.topic}`;
+        const url =`http://localhost:3080/highlights?topic=${this.props.topic}&u=${this.props.user}`;
         console.log('url '+url);
+        console.log('testuserid '+this.props.user);
         return new Promise(function(resolve,reject){
             resolve(fetch(url,requestOptions));
         });
@@ -80,7 +81,7 @@ const Highlightsview = (props) => {
             const reply = await response.json();
             this.setState({highlights:reply});
             console.log('mount');
-            console.log(this.state.highlights[0]['text']['dat']);
+            console.log(this.state.highlights);
         } );
     }
   
@@ -117,7 +118,7 @@ const Highlightsview = (props) => {
               {
                 this.state.highlights.map((item)=>
                   
-                  <EditHighlight string={item.text.dat} />
+                  <EditHighlight string={item.text} />
                 )
               }
               

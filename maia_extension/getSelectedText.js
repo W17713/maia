@@ -1,3 +1,5 @@
+//const session = require("express-session");
+
 /*var temp_data='';
 
 function getSelectedText(e) {
@@ -48,8 +50,10 @@ function receiverFxn(req,sender,sendresp){
 	if(req.sender=='mydash')
 	{
 		console.log('logindat '+req.message)
-		const user=req.message;
-		sessionStorage.setItem('token',JSON.stringify(user));
+		const user=req.message.name;
+		const id = req.message.identifier;
+		sessionStorage.setItem('identifier',JSON.stringify(id));
+		sessionStorage.setItem('user',JSON.stringify(user));
 	}else if(req.sender=='logout'){
 		sessionStorage.clear();
 	}

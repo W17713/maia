@@ -105,7 +105,8 @@ class App extends Component
     super(props);
     this.state = {
       hasToken: false,
-      user:''
+      username:'',
+      userid: ''
     }
     this.recieveloginstate = this.recieveloginstate.bind(this);
     this.getToken = this.getToken.bind(this);
@@ -115,10 +116,11 @@ class App extends Component
       sessionStorage.setItem('token',JSON.stringify(data));
       localStorage.setItem('token',JSON.stringify(data));
       sessionStorage.setItem('user',JSON.stringify(data2));
-      window.postMessage({sender:'mydash',source:'maia',message:data2},'*');
+      window.postMessage({sender:'mydash',source:'maia',message:{identifier:data,name:data2}},'*');
       console.log('message posted');
-      this.setState({hasToken:true});
-      console.log('user'+data2);
+      this.setState({hasToken:true,userid:data,username:data2});
+      console.log('user '+data2);
+      console.log('userid '+data);
     }
     getToken(){
       const token = sessionStorage.getItem('token');
@@ -141,8 +143,8 @@ class App extends Component
                     <Switch>
                       <Redirect exact from='/' to='/home'/>          
                       <Route exact path="/home">
-                        <Head loggedin={true} loggeduser={this.state.user}/>
-                        <Homeview/> 
+                        <Head loggedin={true} loggeduser={this.state.username}/>
+                        <Homeview loggeduser={this.state.userid}/> 
                         <Foot/>
                       </Route> 
                       <Route  path="/signup">

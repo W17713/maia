@@ -20,10 +20,11 @@ window.onload = function checkLogin(){
 	/*if(back.badgeCount>0){
 		document.getElementById('pghighlight').innerHTML("12");
 	}*/
-	const loggedin = back.sessionStorage.getItem('token');
+	const loggedin = back.sessionStorage.getItem('identifier');
+	const username = back.sessionStorage.getItem('user');
 	if(loggedin){
 		document.getElementsByClassName('iconhead')[0].style.display='block';
-		document.getElementById('username').innerHTML=JSON.parse(loggedin);
+		document.getElementById('username').innerHTML=JSON.parse(username);
 	}else{
 		document.getElementsByClassName('iconhead')[0].style.display='none';
 		document.getElementById('username').innerHTML="not signed in";
@@ -121,16 +122,19 @@ const url = "http://localhost:3080/highlights";
 const loginurl="http://localhost:3080/highlights"
 document.getElementById('feedback').addEventListener('click',pushStack);
 function pushStack(){
-	const token = back.sessionStorage.getItem('token');
-	console.log('popup token '+token);
-	if(token){
+	const user = back.sessionStorage.getItem('name');
+	const topic = document.getElementById('inputTop').value;
+	const date = Date.now();
+	const userid = JSON.parse(back.sessionStorage.getItem('identifier'));
+	console.log('popup user '+user);
+	if(userid){
 		chrome.storage.local.get(null,function(data){
-			console.log(token);
+			console.log(user);
 			//Http.open("GET",url);
 			Http.open("POST",url,true);
 			Http.setRequestHeader("Content-Type","application/json;charset=UTF-8");
-			Http.send(JSON.stringify({userdata:{data}}));
-			console.log(JSON.stringify({userdata:{data}}));
+			Http.send(JSON.stringify({userdata:{topic:topic,date:date,userid:userid,data:data}}));
+			console.log(JSON.stringify({userdata:{topic:topic,date:date,userid:userid,data:data}}));
 			
 			//	Http.send();
 			Http.onreadystatechange = function(){

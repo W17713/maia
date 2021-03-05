@@ -36,13 +36,15 @@ class Homeview extends Component {
       this.state = {
         collapsed: false,
         topic:'',
-        hastoken: false
+        hastoken: false,
+        user:''
       };
       this.receivedata=this.receivedata.bind(this);
     }
     
     receivedata(childdata){
       this.setState({topic:childdata});
+      console.log('this props user '+this.state.user)
     }
 
     componentDidMount(){
@@ -113,7 +115,7 @@ class Homeview extends Component {
                       <Route path="/share/6"><Share whichone="6"/></Route>
                       <Route path="/share/7"><Share whichone="7"/></Route>
                       <Route path="/file"><File/></Route>
-                      <Route path="/highlights"><Highlightsview topic={this.state.topic}/></Route>
+                      <Route path="/highlights"><Highlightsview topic={this.state.topic} user={this.props.loggeduser}/></Route>
                     </Switch>
                   
                 </div>

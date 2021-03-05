@@ -47,7 +47,10 @@ app.post('/highlights',function(req,res){
 app.get('/highlights',function(req,res){
     //getmyDocuments
     const topic = req.query.topic;
-    newuser.getmyDocuments('6017b06505201f401833cc9f',0,10).then(function(response){
+    const user = req.query.u;
+    console.log('topic '+topic);
+    console.log('user '+user);
+    newuser.getmyDocuments(user,0,10).then(function(response){
         res.json(response);
     });
     
