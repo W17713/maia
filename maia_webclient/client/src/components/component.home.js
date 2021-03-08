@@ -44,7 +44,7 @@ class Homeview extends Component {
     
     receivedata(childdata){
       this.setState({topic:childdata});
-      console.log('this props user '+this.state.user)
+      console.log('this props user '+this.props.loggeduser)
     }
 
     componentDidMount(){
@@ -115,7 +115,7 @@ class Homeview extends Component {
                       <Route path="/share/6"><Share whichone="6"/></Route>
                       <Route path="/share/7"><Share whichone="7"/></Route>
                       <Route path="/file"><File/></Route>
-                      <Route path="/highlights"><Highlightsview topic={this.state.topic} user={this.props.loggeduser}/></Route>
+                      <Route path="/highlights"><Highlightsview topic={this.state.topic} user={JSON.parse(sessionStorage.getItem('userid'))}/></Route>
                     </Switch>
                   
                 </div>

@@ -118,7 +118,7 @@ const Highlightsview = (props) => {
               {
                 this.state.highlights.map((item)=>
                   
-                  <EditHighlight string={item.text} />
+                  <EditHighlight key={item._id} string={item.text} />
                 )
               }
               

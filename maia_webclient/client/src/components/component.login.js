@@ -35,9 +35,10 @@ const NormalLoginForm  = (props) => {
     fetch('/login',requestOptions)
     .then(async response => {
       const responseData = await response.json();
-      console.log(responseData.data);
+      console.log('response data below');
+      console.log(responseData);
       if(responseData.resp=='success'){
-        props.appcallback(responseData.data,responseData.username);
+        props.appcallback(responseData);
       }
       setMsg(responseData.resp);
     });

@@ -14,8 +14,9 @@ import {
 } from '@ant-design/icons';
 import {BrowserRouter as Router, Switch,Link,Route,Redirect} from 'react-router-dom'
 import Homeview from './components/component.home'
-import NormalSignupForm from './components/component.signup';
-import NormalLoginForm from './components/component.login';
+import Highlightsview from './components/component.highlight'
+import NormalSignupForm from './components/component.signup'
+import NormalLoginForm from './components/component.login'
 import session from "express-session";
 import Error403 from './components/component.403'
 import Error404 from './components/component.404'
@@ -112,28 +113,31 @@ class App extends Component
     this.getToken = this.getToken.bind(this);
   }
 
-    recieveloginstate(data,data2){
-      sessionStorage.setItem('token',JSON.stringify(data));
-      localStorage.setItem('token',JSON.stringify(data));
-      sessionStorage.setItem('user',JSON.stringify(data2));
-      window.postMessage({sender:'mydash',source:'maia',message:{identifier:data,name:data2}},'*');
+    recieveloginstate(data){
+      sessionStorage.setItem('token',JSON.stringify(data.token));
+      localStorage.setItem('token',JSON.stringify(data.token));
+      sessionStorage.setItem('user',JSON.stringify(data.username));
+      sessionStorage.setItem('userid',JSON.stringify(data.userid));
+      //window.postMessage({sender:'mydash',source:'maia',message:{identifier:data.userid,name:data.username}},'*');
       console.log('message posted');
-      this.setState({hasToken:true,userid:data,username:data2});
-      console.log('user '+data2);
-      console.log('userid '+data);
+      this.setState({hasToken:true});
+      console.log('user '+data.username);
+      console.log('userid '+data.userid);
     }
     getToken(){
       const token = sessionStorage.getItem('token');
-      const tokenpair = JSON.parse(token);
-      return tokenpair;
+      const id = sessionStorage.getItem('userid');
+      const username = sessionStorage.getItem('username');
+      const tokengroup = {token:JSON.parse(token),id:JSON.parse(id),username:JSON.parse(username)};
+      return tokengroup;
     }
     componentDidMount(){
       this.getToken();
     }
 
     render(){
-      const token = this.getToken();
-      if(token){
+      const tokengrp = this.getToken();
+      if(tokengrp.token){
         return (
           <Router>
             <div>
@@ -143,8 +147,8 @@ class App extends Component
                     <Switch>
                       <Redirect exact from='/' to='/home'/>          
                       <Route exact path="/home">
-                        <Head loggedin={true} loggeduser={this.state.username}/>
-                        <Homeview loggeduser={this.state.userid}/> 
+                        <Head loggedin={true} loggeduser={tokengrp.username}/>
+                        <Homeview loggeduser={tokengrp.userid}/> 
                         <Foot/>
                       </Route> 
                       <Route  path="/signup">
@@ -152,6 +156,9 @@ class App extends Component
                       </Route>
                       <Route  path="/login">
                         <Redirect to='/'/>
+                      </Route>
+                      <Route  path="/highlights">
+                        <Redirect to='/home'/>
                       </Route>
                       <Route  path="/settings">
                         <Sider />
@@ -186,6 +193,9 @@ class App extends Component
                         <Redirect to='/'/>
                       </Route>
                       <Route  path="/home">
+                        <Redirect to='/'/>
+                      </Route>
+                      <Route  path="/highlights">
                         <Redirect to='/'/>
                       </Route>
                       <Route path='/admin'>

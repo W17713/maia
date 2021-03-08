@@ -99,7 +99,7 @@ app.post('/login',function(req,res){
             }else{
                 sess.userid = resp[0]['_id'];
                 sess.username=resp[0]['username'];
-                res.json({'resp':'success','data':sess.userid,'username':sess.username});
+                res.json({'resp':'success','token':sess.userid,'userid':sess.userid,'username':sess.username});
                 /*console.log(resp[0]['_id']);
                 res.write('<p>you can logout here</p>');
                 sess.userid = resp[0]['_id'];
