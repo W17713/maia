@@ -90,8 +90,8 @@ class Homeview extends Component {
                 
                   <SubMenu key="sub2" icon={<TeamOutlined />} title="Shared">
                   
-                  <Menu.Item key="6"><Link to="/share/6">Sent</Link></Menu.Item>
-                  <Menu.Item key="7"><Link to="/share/7">Received</Link></Menu.Item>
+                  <Menu.Item key="6"><Link to="/share/sent">Sent</Link></Menu.Item>
+                  <Menu.Item key="7"><Link to="/share/received">Received</Link></Menu.Item>
                   </SubMenu>
                 
                 
@@ -112,8 +112,8 @@ class Homeview extends Component {
                     
                     <Switch>
                       <Route exact path="/home"><LoadMoreList homecallback={this.receivedata}/></Route>
-                      <Route path="/share/6"><Share whichone="6"/></Route>
-                      <Route path="/share/7"><Share whichone="7"/></Route>
+                      <Route path="/share/sent"><Share whichone="6"/></Route>
+                      <Route path="/share/received"><Share whichone="7"/></Route>
                       <Route path="/file"><File/></Route>
                       <Route path="/highlights"><Highlightsview topic={this.state.topic} user={JSON.parse(sessionStorage.getItem('userid'))}/></Route>
                     </Switch>

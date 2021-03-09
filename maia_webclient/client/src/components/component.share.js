@@ -13,32 +13,55 @@ const ShareTab = (props) =>{
           //onTabClick={callback} 
         <Tabs type="card" activeKey={props.whichkey}>
             <TabPane tab="Sent" key="6">
-            Content of Tab Pane 1
+            {props.data}
             </TabPane>
             <TabPane tab="Received" key="7">
-            Content of Tab Pane 2
+            {props.data}
             </TabPane>
         </Tabs>
     )
       
-      }
+      };
 
+
+      const getsharedItems = (url) =>{
+        const requestOptions = {
+            method: "GET",
+            headers: {
+                'Content-Type':'application/json'
+            }
+        };
+            return new Promise(function(resolve,reject){
+                resolve(fetch(url,requestOptions));
+            });
+    };
+
+const id = sessionStorage.getItem('userid');
 const Share = (props)=>
 {
+    const [sharedItems,setShared] = useState('');
     //console.log(props.whichone);
     //const [whichkey,setwhich]=useState('');
     
       //console.log('key '+props.whichone);
+    var url = '';
+    var key='';
     if(props.whichone=="6")
     {
-    return (
-        <ShareTab whichkey="6"/>
-    )
+        url = `http://localhost:3000/share/sent?id=${id}`;
+        key ="6";
     }else
     {
-    return (
-        <ShareTab whichkey="7"/>
-    )
+        url = `http://localhost:3000/share/received?id=${id}`;
+        key = "7";
     }
+    getsharedItems(url).then(async items => {
+        const list = await items.json();
+        setShared(list);
+    });
+    return (
+        <ShareTab whichkey={key} data={sharedItems}/>
+    )
+
 };
 export default Share;

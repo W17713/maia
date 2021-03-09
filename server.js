@@ -183,6 +183,18 @@ app.post('/deletehigh',function(req,res){
     newHighlight.deletepost(req.body.postid);
     res.write('<p>post deleted</p>');
 });
+
+app.get('/share/sent', function(req,res){
+    const user = req.query.id;
+    console.log('user sent'+user);
+    res.send(user);
+});
+
+app.get('/share/received', function(req,res){
+    const user = req.query.id;
+    console.log('user received'+user);
+    res.send(user);
+});
 //set port=2000 && 
 app.get('/',function(req,res){
    res.sendFile(path.join(path.join(__dirname,'maia_webclient/client'),"public","index.html"));
@@ -191,3 +203,4 @@ app.get('/',function(req,res){
 app.listen(3080,()=>{
     console.log('app listening on port 3080');
 });
+
