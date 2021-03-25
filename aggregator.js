@@ -13,10 +13,11 @@ class Aggregator {
        if(data.length !==0){
         mongoclient.connect(this.url, function(err,db){
             if(err) throw err;
-            var dbo =  db.db(dbName);  
+            var dbo =  db.db(dbName); 
+            console.log(dbo); 
             dbo.collection(collectionName).insertMany(data, function(err,res){
                 if(err) throw err;
-                //console.log(res);
+                console.log(res);
                 db.close();
             });        
         });
@@ -61,6 +62,8 @@ class Aggregator {
 
     //query one collection
     query(query,collectionName,offset,limit){  
+        console.log(query);
+        console.log('collectionName '+collectionName);
         const start = (typeof(offset)!='undefined') ? parseInt(offset) : 0;
         const limited =(typeof(limit)!='undefined') ? parseInt(limit) : 5;
         //console.log('start '+start);
@@ -72,12 +75,12 @@ class Aggregator {
                     reject(err);
                 }else{
                     resolve(db);
-                    //console.log('db resolved');
+                    //console.log(db);
                 }
             });
         }).then(function(db) {
             return new Promise(function(resolve, reject) {
-                //console.log(db.db(dbName));
+                console.log(db.db(dbName));
                 var dbo = db.db(dbName);
                 dbo.collection(collectionName).find(query).skip(start).limit(limited).toArray(function(err,items) {
                     if(err){

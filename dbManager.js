@@ -3,7 +3,7 @@ const { MongoMemoryServer }  = require('mongodb-memory-server-global');
 
 //jest.setTimeout(60000);
 
-const COLLECTIONS =['Users','Highlights'];
+const COLLECTIONS =['Users','Highlights','Shared'];
 
 class dbManager{
 constructor(){

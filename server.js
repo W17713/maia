@@ -187,13 +187,19 @@ app.post('/deletehigh',function(req,res){
 app.get('/share/sent', function(req,res){
     const user = req.query.id;
     console.log('user sent'+user);
-    res.send(user);
+    newHighlight.shareTopic(user).then(function(response){
+        res.send(response);
+    })
+    
 });
 
 app.get('/share/received', function(req,res){
     const user = req.query.id;
     console.log('user received'+user);
-    res.send(user);
+    newHighlight.receivedTopics(user).then(function(response){
+        res.send(response);
+    })
+   // res.send(user);
 });
 //set port=2000 && 
 app.get('/',function(req,res){

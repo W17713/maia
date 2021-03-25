@@ -7,8 +7,8 @@ const { TabPane } = Tabs;
 const ShareTab = (props) =>{
     var key = props.whichkey;
     console.log('key st'+key)
-    function callback(key) {
-    }
+    /*function callback(key) {
+    }*/
       return (
           //onTabClick={callback} 
         <Tabs type="card" activeKey={props.whichkey}>
@@ -32,7 +32,7 @@ const ShareTab = (props) =>{
             }
         };
             return new Promise(function(resolve,reject){
-                resolve(fetch(url,requestOptions));
+                resolve(fetch(url,requestOptions)).catch(err=>{this.handleError(err.message)});
             });
     };
 
@@ -43,11 +43,12 @@ const Share = (props)=>
     //console.log(props.whichone);
     //const [whichkey,setwhich]=useState('');
     
-      //console.log('key '+props.whichone);
+    console.log('key '+props.whichone);
     var url = '';
     var key='';
     if(props.whichone=="6")
     {
+        console.log('props '+ props.whichone);
         url = `http://localhost:3000/share/sent?id=${id}`;
         key ="6";
     }else
@@ -56,7 +57,11 @@ const Share = (props)=>
         key = "7";
     }
     getsharedItems(url).then(async items => {
+        console.log('item url '+url);
         const list = await items.json();
+        
+        console.log('list');
+        console.log(list);
         setShared(list);
     });
     return (
