@@ -41,20 +41,20 @@ class Highlight{
             });
     }
 
-    shareTopic(senderID,topic,receiverID){//senderID,topic,receiverID
+    shareTopic(senderID){//senderID,topic,receiverID
         return new Promise(function(resolve,reject){
-            if(senderID=='' || topic == '' || receiverID==''){
+         //   if(senderID=='' || topic == '' || receiverID==''){
            //     resolve('senderid,topic and receiver are all required');
-            }else{//'sender':'60085c0464c4bc3cfc584c2c','topic': 'Photosynthesis','receiver':'6016d2a5fbda613e70ef7d42'
-                const response = Agg.put([{'sender':senderID,'topic':topic,'receiver':receiverID}],sharedCollection);
-                //
+         //   }else{//
+                const response = Agg.put([{'sender':senderID,'topic': 'Photosynthesis','receiver':senderID}],sharedCollection);
+                //'sender':senderID,'topic':topic,'receiver':receiverID
                 console.log(response);
                 resolve(response);
-           }
+        //   }
         });
     }
 
-    receivedTopics(myID){
+    receivedTopics(myID,start,limit){
        // const querydocs = this.getOrderedDocs;
         return new Promise(function(resolve,reject){
             if(myID===undefined || myID ==''){
@@ -64,14 +64,21 @@ class Highlight{
                     //console.log(returned);
                     resolve(returned);
                 });*/
-                return new Promise(function(resolve,reject){
-                    Agg.query({ 'receiver': JSON.parse(myID)},sharedCollection).then(function(returned){
+
+                Agg.query({ 'receiver': myID},sharedCollection,start,limit).then(function(returned){
+                    console.log('returned');
+                    console.log('ID '+myID);
+                    console.log(returned);
+                    resolve(returned);
+                });
+                /*return new Promise(function(resolve,reject){
+                    Agg.query({ 'receiver': myID},sharedCollection,start,limit).then(function(returned){
                         console.log('returned');
                         console.log('ID '+myID);
                         console.log(returned);
                         resolve(returned);
                     });
-                }).catch(err=>{console.log('caught ',err.message)});
+                }).catch(err=>{console.log('caught ',err.message)});*/
              /*   .then(function(returned){
                     //console.log(returned);
                     return new Promise(function(resolve,reject){

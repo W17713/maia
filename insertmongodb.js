@@ -22,7 +22,7 @@ var query = {user: 'Babel'}
 //aggregator.put(data,'Shared');
 //aggregator.get(collection);
 //aggregator.query({},'Users');
-aggregator.query({'receiver':"6016d2a5fbda613e70ef7d42"},sharedCollection);
+aggregator.query({},collection);
 //console.log(aggregator.query(query,collection));
 //var que = "6005481b00c5b241ec0094b2";
 //var newque = {user: "Amylia",text: "somenew 123"};
