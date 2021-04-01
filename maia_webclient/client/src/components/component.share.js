@@ -58,7 +58,6 @@ const Share = (props)=>
     
     if(props.whichone=="6")
     {
-        console.log('props '+ props.whichone);
         url = `http://localhost:3080/share/sent?id=${id}`;
         key ="6";
     }
@@ -71,13 +70,13 @@ const Share = (props)=>
         () =>{
             let mounted = true;
             getsharedItems(url).then(async items => {
-                //console.log('item url '+url);
+                console.log('item url '+url);
                 const list = await items.json();
                 if(mounted)
                 //console.log('mounted');
                 {setShared(list)}
                 //console.log('list');
-               // console.log(list);
+                console.log(list);
             }).catch(err=>{console.log(err.message)});
             return () => mounted = false;
         },[]
@@ -87,7 +86,19 @@ const Share = (props)=>
     return (
         <Tabs type="card" activeKey={key}>
             <TabPane tab="Sent" key="6">
-            {props.data}
+            <List
+                    itemLayout="horizontal"
+                    dataSource={sharedItems}
+                    renderItem={item => (
+                    <List.Item>
+                        <List.Item.Meta
+                        avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />}
+                        title={<a href="https://ant.design">{item.topic}</a>}
+                        description={'sent to: '+item.receiver}
+                        />
+                    </List.Item>
+                    )}
+                />
             </TabPane>
             <TabPane tab="Received" key="7">
                 

@@ -41,7 +41,7 @@ class Highlight{
             });
     }
 
-    shareTopic(senderID){//senderID,topic,receiverID
+    sendTopic(senderID){//senderID,topic,receiverID
         return new Promise(function(resolve,reject){
          //   if(senderID=='' || topic == '' || receiverID==''){
            //     resolve('senderid,topic and receiver are all required');
@@ -54,7 +54,7 @@ class Highlight{
         });
     }
 
-    receivedTopics(myID,start,limit){
+    sharedTopics(key,myID,start,limit){
        // const querydocs = this.getOrderedDocs;
         return new Promise(function(resolve,reject){
             if(myID===undefined || myID ==''){
@@ -64,8 +64,11 @@ class Highlight{
                     //console.log(returned);
                     resolve(returned);
                 });*/
-
-                Agg.query({ 'receiver': myID},sharedCollection,start,limit).then(function(returned){
+                var query = {};
+                query[key]=myID;
+                //{ key : myID}
+                Agg.query(query,sharedCollection,start,limit).then(function(returned){
+                    
                     console.log('returned');
                     console.log('ID '+myID);
                     console.log(returned);

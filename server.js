@@ -186,10 +186,12 @@ app.post('/deletehigh',function(req,res){
 
 app.get('/share/sent', function(req,res){
     const user = req.query.id;
-    res.send('user sent'+user);
-    /*newHighlight.shareTopic(user).then(function(response){
+    const limit = (typeof(req.query.limit)!='undefined') ?  req.query.limit : 5;
+    const start = (typeof(req.query.offset)!='undefined') ?  req.query.offset : 0;
+    
+    newHighlight.sharedTopics('sender',user,start,limit).then(function(response){
         res.send(response);
-    })*/
+    })
     
 });
 
@@ -198,7 +200,7 @@ app.get('/share/received', function(req,res){
     const limit = (typeof(req.query.limit)!='undefined') ?  req.query.limit : 5;
     const start = (typeof(req.query.offset)!='undefined') ?  req.query.offset : 0;
     //console.log('user received'+user);
-    newHighlight.receivedTopics(user,start,limit).then(function(response){
+    newHighlight.sharedTopics('receiver',user,start,limit).then(function(response){
         //console.log(response);
         res.send(response);
     });
