@@ -17,6 +17,7 @@ import Homeview from './components/component.home'
 import Highlightsview from './components/component.highlight'
 import NormalSignupForm from './components/component.signup'
 import NormalLoginForm from './components/component.login'
+import Publicview from './components/component.public'
 import session from "express-session";
 import Error403 from './components/component.403'
 import Error404 from './components/component.404'
@@ -163,6 +164,9 @@ class App extends Component
                       <Route  path="/settings">
                         <Sider />
                       </Route>
+                      <Route  path="/public">
+                        <Publicview />
+                      </Route>
                     </Switch>
                   </Layout>
                 </Col>
@@ -197,6 +201,9 @@ class App extends Component
                       </Route>
                       <Route  path="/highlights">
                         <Redirect to='/'/>
+                      </Route>
+                      <Route  path="/public">
+                        <Publicview />
                       </Route>
                       <Route path='/admin'>
                         <Error403/>

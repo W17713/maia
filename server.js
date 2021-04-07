@@ -34,7 +34,7 @@ app.post('/highlights',function(req,res){
         console.log(req.body.userdata.data[j]);
         //push each document to collection
         //sess.userid
-        agg.put([{'userid':req.body.userdata.userid,'date':req.body.userdata.date,'topic':req.body.userdata.topic,'text':req.body.userdata.data[j],'orderno':req.body.userdata.data[j].orderno}],'Highlights');
+        agg.put([{'userid':req.body.userdata.userid,'date':req.body.userdata.date,'topic':req.body.userdata.topic,'private':req.body.userdata.private,'text':req.body.userdata.data[j],'orderno':req.body.userdata.data[j].orderno}],'Highlights');
         i++;
     }
     res.sendStatus(200); 
@@ -53,8 +53,6 @@ app.get('/highlights',function(req,res){
     newuser.getmyDocuments(user,0,10).then(function(response){
         res.json(response);
     });
-    
-
 });
 
 
@@ -205,6 +203,14 @@ app.get('/share/received', function(req,res){
         res.send(response);
     });
    // res.send(user);
+});
+
+app.get('/public', function(req,res){
+    const topic = req.query.topic;
+    console.log('id '+topic);
+    newHighlight.getPublicDoc(topic).then(function(response){
+        res.send(response);
+    });
 });
 //set port=2000 && 
 app.get('/',function(req,res){

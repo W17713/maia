@@ -77,9 +77,6 @@ class Homeview extends Component {
                 <Menu.Item key="1" icon={<PieChartOutlined />}>
                   <Link to="/home"> Home</Link>
                 </Menu.Item>
-                <Menu.Item key="2" icon={<DesktopOutlined />}>
-                  Option 2
-                </Menu.Item>
                 
                   <SubMenu key="sub1" icon={<UserOutlined />} title="Topics">
                   <Menu.Item key="3"><Link to="/highlights">Highlights</Link></Menu.Item>

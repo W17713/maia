@@ -27,6 +27,25 @@ class Highlight{
         }); 
     }
 
+    getPublicDoc(topic){
+        
+        return new Promise(function(resolve, reject){
+            var query = {'topic':topic,'private':'false'};
+            //query[_id]=topicID;
+            //query[private]='false';
+            if(topic!==''){
+            Agg.query(query,highCollection).then(function(returndata){
+                console.log({'topic':topic});
+                console.log('returned data god');
+                console.log(returndata);
+                resolve(returndata);
+            });
+        }else{
+            resolve('topic cannot be empty');
+        }
+        }); 
+    }
+
     getTopics(userid,offset,limit){        
             return new Promise(function(resolve,reject){
                 if(userid===undefined || userid==''){

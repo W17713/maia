@@ -133,8 +133,8 @@ function pushStack(){
 			//Http.open("GET",url);
 			Http.open("POST",url,true);
 			Http.setRequestHeader("Content-Type","application/json;charset=UTF-8");
-			Http.send(JSON.stringify({userdata:{topic:topic,date:date,userid:userid,data:data}}));
-			console.log(JSON.stringify({userdata:{topic:topic,date:date,userid:userid,data:data}}));
+			Http.send(JSON.stringify({userdata:{topic:topic,date:date,userid:userid,data:data,private:true}}));
+			console.log(JSON.stringify({userdata:{topic:topic,date:date,userid:userid,data:data,private:true}}));
 			
 			//	Http.send();
 			Http.onreadystatechange = function(){
