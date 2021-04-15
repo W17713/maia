@@ -1,4 +1,6 @@
 from flask import Flask,request
+import shutil
+import os
 
 app = Flask(__name__)
 
@@ -14,3 +16,14 @@ def filevcs():
         file.close
         return request.json
     return 'filevcs'
+
+
+@app.route('/api/v1/add', methods=["POST"])
+def mount():
+    filename=request.args.get('name')
+    cwd = os.getcwd()
+    ext='.txt'
+    print(format(cwd))
+    shutil.move(cwd+'\\files\\'+filename+ext,cwd+'\\staged\\'+filename+ext)
+    return 'done'
+
