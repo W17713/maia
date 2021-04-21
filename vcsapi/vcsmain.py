@@ -1,6 +1,7 @@
 from flask import Flask,request,jsonify
 import shutil
 import os
+import difflib
 
 app = Flask(__name__)
 
@@ -47,4 +48,31 @@ def status():
     commitfiles=os.listdir(commitpath)
     return jsonify(committed_files=commitfiles,staged_files=stagedfiles)
 
+def showDiff(file1,file2):
+    d = difflib.Differ()
+    diff = d.compare(file1,file2)
+    print('\n'.join(diff))
+    return diff
+
+@app.route('/api/v1/compare',methods=["POST"])
+def diff():
+    files=request.get_json()
+    #print(files)
+    #print(files["oldfile"])
+    cwd = os.getcwd()
+    ext='.txt'
+    filepath=cwd+'\\files\\'
+    oldfile=filepath+files["oldfile"]+ext
+    old=open(oldfile,'r')
+    olddata=old.read()
+    textone=olddata.splitlines()
+    #print(textone)
+    newfile=filepath+files["newfile"]+ext
+    new=open(newfile,'r')
+    newdata=new.read()
+    texttwo=newdata.splitlines()
+    #print(texttwo)
+    diff=showDiff(textone,texttwo)
+    #print(diff)
+    return 'done'#jsonify(difference=diff)
 
